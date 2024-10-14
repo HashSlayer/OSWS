@@ -80,9 +80,27 @@ def leftkey(x = 1):
     pag.keyUp('left')
     sleep()
 
-def spacekey(x = .05):
+def spacekey(x = .1, x1 = .1, x2 = .1):
     pag.keyDown('space')
-    sleep(x, .1, .1)
+    sleep(x, x1, x2)
     pag.keyUp('space')
     sleep() 
+
+def onekey(x = 1):
+    pag.keyDown('1')
+    sleep(x, .001, .001)
+    pag.keyUp('1')
+    sleep()
+
+def twokey(x = 1):
+    pag.keyDown('2')
+    sleep(x, .001, .001)
+    pag.keyUp('2')
+    sleep()
+
+def threekey(x = 1):
+    pag.keyDown('3')
+    sleep(x, .001, .001)
+    pag.keyUp('3')
+    sleep()
 

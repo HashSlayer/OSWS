@@ -15,6 +15,8 @@ welcome()
 running = False
 running_lock = threading.Lock()
 
+loops = 0
+
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Walker Program
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -23,40 +25,96 @@ running_lock = threading.Lock()
 def walker():
     """Loop that performs clicks at a fixed interval while running is True."""
     global running
+    global loops
     while True:
         with running_lock:
             if not running:
                 break
+
+        sleep(1, 1)
+        print("Starting Blowpipe Sequence")
         bank_near_inv()
-        sleepif()
-        click()
         sleep()
+        click()
+        sleep(1, 2)
+
         deposit_all()
+        if rnd.random() > 0.713:
+            sleep(0,1)
         sleep()
-        sleepif() 
         click()
+        if rnd.random() > 0.678114:
+            click()
+            if rnd.random() > 0.83:
+                click()
+        if rnd.random() > 0.7:
+            sleep(0,1)
+        sleep()
+
         bank_slot(7)
-        sleepif()
+        if rnd.random() > 0.727:
+            sleep(0,1)
         click()
+        sleep()
+
         bank_slot(8)
-        sleep(.5, .5)
         get_x_items()
-        sleepif()
-        sleep(.5, .5)
+        sleep()
+        click()
+        if rnd.random() > 0.97:
+            sleep()
+        sleep()
+
         exit_bank()
-        sleep(.01, .5)
-        sleepif()
+        sleep(.7, .5)
         click()
-        sleep(3) 
+        sleep(.5, 1)
+
+        if rnd.random() > 0.9:
+            sleep(0,3)
+
         inv_slot(1)
-        sleepif()
+        sleep()
         click()
-        inv_slot(2)
-        sleepif()
-        click()
-        sleep(.5, 3)
+        sleep()
+
+        if rnd.random() > 0.867:
+            inv_slot(2)
+            sleep()
+            click()
+            sleep()
+        else:
+            inv_slot(5)
+            sleep()
+            click()
+            sleep()
+
+        sleep(0.7, 1)
         spacekey()
-        sleep(30 ,30)
+        if rnd.random() > 0.7:
+            spacekey()
+        sleep(44, 7, 3)
+        print("Ending Blowpipe Sequence")
+        if rnd.random() > 0.2:
+            sleep(0, 2)
+            if rnd.random() > 0.9:
+                sleep(.1, 8)
+                print("Lets wait a bit")
+
+        loops += 1
+        print("Loop:", loops)
+
+        if rnd.random() > 0.991:
+            sleep(4, 13)
+            print("Small Sleep")    
+            if rnd.random() > 0.991:
+                sleep(10, 120)
+                print("Big Sleep")
+
+#zoomed out by 4 pixels 
+
+# Warning holding left CTRL turning the progran on and off can crash the program
+# Warning holding right CTRL will exit the program
         
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------

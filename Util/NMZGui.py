@@ -12,10 +12,11 @@ current_script_dir = os.path.dirname(__file__)
 parent_dir = os.path.abspath(os.path.join(current_script_dir, '..'))
 # Add the parent directory to sys.path
 sys.path.append(parent_dir)
-from Utilities.MainFunctions import *
-from Utilities.Movement import *
-from Utilities.Conffeti import *
-from Utilities.Banking import *
+from Conffeti import *
+from ItemSlots import *
+from MainFunctions import *
+from MouseMovement import *
+from Welcome import *
 
 # Global variables
 running = False
@@ -50,7 +51,8 @@ def SipCounter():
         gui.append_message(f"Drank 4 sips, moving to next potion {pot_number} next time.")
         pots += 1
         sleep(1.2, .6, .6)
-        if rnd.random() > 0.3:
+        if rnd.random() > 0.3 and skill_pot_number < 29:
+            sleepif()
             inv_slot(skill_pot_number)
             sleep(1.08, .59, .43)
             click()
@@ -60,6 +62,7 @@ def SipCounter():
                 sleep(.05, .1)
                 skill_pot_number += 1
                 skill_pot_sips = 0
+
         sleep(1.3, 1.2, .1)
         sleep()
         sips = 0
@@ -229,7 +232,6 @@ class GGui:
         # GUI-specific logic
         self.start_confetti_animation()
         # Ensure this operation is safe and necessary
-        kAltright()
         # Restore the kill button state after shutdown process
         self.kill_button.config(text="KILLED", state=tk.NORMAL)
 
@@ -433,14 +435,18 @@ def walker(gui):
 
             global sips, pots, rows, sipped
 
-            sleep(60, 6, 6) # SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP HERE
+            sleep(57, 7, 6) # SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP HERE
             if rnd.random() > 0.889:
                 click_near()
                 Notbotting()
                 Notbotting()
-            sleep(5, 2, 3) # SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP HERE
+            sleep(15, 12, 6) # SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP SLEEP HERE
             if rnd.random() > 0.289:
                     Notbotting()
+                    if rnd.random() > 0.889:
+                        twokey()
+                        sleep(.1, 1)
+                        onekey()
 
             print("Starting loop!")
             gui.append_message("Starting loop!")

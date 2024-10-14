@@ -7,14 +7,15 @@ def inv_slot(slot = 1, time_multiplier = 1, sleep_for = .01, sleep_upto = .01, x
     column = slot % 4
     x = x + (61 * column)
     y = y + (51 * row)
+    x = rnd.randint(x - z, x + z)  # Randomize x within the range
+    y = rnd.randint(y - z, y + z)  # Randomize y within the range
     if slot == 1:
         time_multiplier = 1.2
     if slot < 29:
         print("Slot:", slot, " Row:", row, " Column:", column, " X:", x, " Y:", y)
-        bezierMove(rnd.randint(x-z, x+z), rnd.randint(y-z, y+z), time_multiplier)
-        slot == 1
+        bezierMove(x, y, time_multiplier)
     else:
-        sleep(.1,.9,.9)
+        sleep(.1, .9, .9)
 
 def bank_slot(slot = 1, time_multiplier = 1, sleep_for = .01, sleep_upto = .01, x = 520, y=160, z=10): #Can +/- 20 pixels and be fine X, and Y define the middle of the first item in bank
     # Add 32 to X for each slot, add 35 to Y, -32 * 8 to x for every 8 slots
@@ -24,8 +25,10 @@ def bank_slot(slot = 1, time_multiplier = 1, sleep_for = .01, sleep_upto = .01, 
     column = slot % 8
     x = x + (69 * column)
     y = y + (52 * row)
+    x = rnd.randint(x - z, x + z)  # Randomize x within the range
+    y = rnd.randint(y - z, y + z)  # Randomize y within the range
     print("Slot:", slot, " Row:", row, " Column:", column, " X:", x, " Y:", y)
-    bezierMove(rnd.randint(x-z, x+z), rnd.randint(y-z, y+z), time_multiplier)
+    bezierMove(x, y, time_multiplier)
     sleep(sleep_for, sleep_upto, .003) #sleep
 
 def bank_near_inv(x1=1480, x2=1540, y1=615, y2=885, time= rnd.randint(23, 48)/100, wait=.3):
@@ -49,8 +52,6 @@ def deposit_all(x=1030, y=760, size=9, time = rnd.randint(30, 45)/100, pause_upt
     else:
         bezier_between(x-7,x+8, y-6, y+10, time)
     sleep(.1, pause_upto, .02) #sleep
-    if rnd.random() > 0.8:
-        click()
 
 
 #Set as Withdraw item as note    
@@ -62,7 +63,7 @@ def deposit_all(x=1030, y=760, size=9, time = rnd.randint(30, 45)/100, pause_upt
 
 
 #RELATIVE MOVEMENT
-def get_x_items(x1 = -30, x2 = 20, y1 = 93, y2 = 97, time= rnd.random() * 0.1 + rnd.randint(13, 29)/100, pause_upto=.2):
+def get_x_items(x1 = -30, x2 = 20, y1 = 93, y2 = 97, time= rnd.random() * 0.2 + rnd.randint(23, 39)/100, pause_upto=.2):
     sleep(.03, .09) #sleep
     right_click() #right click
     if (rnd.random() > 0.69420): # REFINED WAY TO LOCALIZE LOCATIONS
@@ -70,13 +71,12 @@ def get_x_items(x1 = -30, x2 = 20, y1 = 93, y2 = 97, time= rnd.random() * 0.1 + 
     else:
         bezier_relative(x1, x2, y1+1, y2-1, time) #move mouse down to quantity of X
     sleep(.05, pause_upto, .02) #sleep
-    click() # Get X amount of items
 
 
      # Copy the get_x_items() function with this line: pag.moveRel(rnd.randint(-30, 17), rnd.randint(101, 114), yrt * 0.12 + 0.23) #move mouse down to quantity of all
 
 
-def get_all_items(x1 = -30, x2 = 20, y1 = 132, y2 = 136, time= rnd.random() * 0.15 + 0.2, pause_upto=.2):
+def get_all_items(x1 = -30, x2 = 20, y1 = 132, y2 = 136, time= rnd.random() * 0.15 + 0.3, pause_upto=.2):
     sleep(.03, .09) #sleep
     right_click() #right click
     if (rnd.random() > 0.69420): # REFINED WAY TO LOCALIZE LOCATIONS
@@ -84,4 +84,3 @@ def get_all_items(x1 = -30, x2 = 20, y1 = 132, y2 = 136, time= rnd.random() * 0.
     else:
         bezier_relative(x1, x2, y1+1, y2-1, time) #move mouse down to quantity of X
     sleep(.05, pause_upto, .02) #sleep
-    click() # Get X amount of items
