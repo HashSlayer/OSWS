@@ -12,7 +12,7 @@ def inv_slot(slot = 1, time_multiplier = 1, sleep_for = .01, sleep_upto = .01, x
     if slot == 1:
         time_multiplier = 1.2
     if slot < 29:
-        print("Slot:", slot, " Row:", row, " Column:", column, " X:", x, " Y:", y)
+        #print("Slot:", slot, " Row:", row, " Column:", column, " X:", x, " Y:", y)
         bezierMove(x, y, time_multiplier)
     else:
         sleep(.1, .9, .9)
@@ -27,7 +27,7 @@ def bank_slot(slot = 1, time_multiplier = 1, sleep_for = .01, sleep_upto = .01, 
     y = y + (52 * row)
     x = rnd.randint(x - z, x + z)  # Randomize x within the range
     y = rnd.randint(y - z, y + z)  # Randomize y within the range
-    print("Slot:", slot, " Row:", row, " Column:", column, " X:", x, " Y:", y)
+    #print("Slot:", slot, " Row:", row, " Column:", column, " X:", x, " Y:", y)
     bezierMove(x, y, time_multiplier)
     sleep(sleep_for, sleep_upto, .003) #sleep
 

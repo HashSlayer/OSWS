@@ -63,6 +63,9 @@ def walker():
                 sleep(1, 30)
                 print("Big Sleep")
 
+        if rnd.random() > 0.999:
+            sleep(1, 300)
+
 
 #zoomed out by 4 pixels 
 

@@ -32,7 +32,7 @@ def walker():
                 break
 
         sleep(1, 1)
-        print("Starting Blowpipe Sequence")
+        print("Starting Smithing Sequence")
         bezier_between(886, 893, 281, 289) #clicking on the bank is slightly off
         sleep(.5, 2)
         click()
@@ -46,11 +46,13 @@ def walker():
         click()
         sleep(0.1, 1) 
         if rnd.random() > 0.813:
-            sleep(0,3)
+            Notbotting2()
 
         bank_slot(7)
         sleep()
         click()
+        if rnd.random() > 0.913:
+            Notbotting2()
         sleep()
         if rnd.random() > 0.813:
             sleep(0,3)
@@ -86,6 +88,12 @@ def walker():
         sleep()
         if rnd.random() > 0.9:
             sleep(0,10)
+        if loops > 100 and rnd.random() > 0.9:
+            sleep(0,30, 30)
+            print("Bigger Sleep")
+
+        loops += 1
+        print("Completed Sequence", loops, "times")
 
 
 #zoomed out by 4 pixels 
