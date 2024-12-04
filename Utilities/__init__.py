@@ -1,6 +1,4 @@
-#__Init__.py file
+# Empty file to make utils a Python package
 from . import *
-from . import MainFunctions
-from . import Banking
-from . import Movement
-from . import Conffeti
+from . import timmy
+from . import move
