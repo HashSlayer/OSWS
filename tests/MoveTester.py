@@ -1,2 +1,2 @@
-from ..utils.move import move
+from ..utilities.move import move
 
