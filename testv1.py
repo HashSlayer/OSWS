@@ -1,4 +1,4 @@
-from OldUtilities.timmy import *
+from utilities.timmy import *
 
 quick_sleep()
 

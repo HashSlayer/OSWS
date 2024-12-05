@@ -1,8 +1,14 @@
-# A file that contains the time module and the datetime module
+# Time module for random sleep functions 
+
 import time 
 import random as rnd
 
 # This file abstracts the time module and the datetime module for anti bot detection purposes, it is used to make the bot more human like.
+
+# define sleep as in between medium and quick sleep
+def sleep(c=0.023, x=0.122, z=0.368):
+    "Sleep between ~0.023-0.513 seconds"
+    time.sleep(c + rnd.random() * x + rnd.random() * z)
 
 def quick_sleep(c=0.007, x=0.008, z=0.017):
     """
@@ -11,22 +17,12 @@ def quick_sleep(c=0.007, x=0.008, z=0.017):
     """
     time.sleep(c + rnd.random() * x + rnd.random() * z)
 
-# define sleep as in between medium and quick sleep
-def sleep(c=0.023, x=0.122, z=0.368):
-    "Sleep between ~0.023-0.513 seconds"
-    time.sleep(c + rnd.random() * x + rnd.random() * z)
-
 def long_sleep(c=0.8018, x=0.421, z=0.614):  # Similar pattern but longer delays
     "Longer random delay between ~0.8018-2.053 seconds"
     time.sleep(c + rnd.random() * x + rnd.random() * z)
 
 
 # These are the three main sleep functions, they are used to sleep for a random amount of time between a certain range.
-
-def sleep_between(t1, t2):
-    #sleep for a random amount of time between t1 and t2
-    time.sleep(rnd.uniform(t1, t2)) #rnd.uniform is used to generate a random float between t1 and t2. floats can have decimals
-
 
 # Define a function for random sleep variance from ~0.1 to ~0.5 seconds
 def sleep_if(sleep_chance=0.618, sleep_amount=0.01):
