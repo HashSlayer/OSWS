@@ -1,43 +1,164 @@
 # mouse clicker module
 
+import time as time
 import pyautogui as pag
-from timmy import *
+from .timmy import *
 
-def click_between(min_time, max_time):
+
+def click(hold = 0.001, randomize = True):
+    pag.mouseDown(button='left')  # Press the right button down
+    if randomize:
+        sleep(hold, hold/2 , hold/3)
+        if rnd.random() > 0.618:
+            time.sleep(rnd.random() * 0.05)
+        if rnd.random() > 0.11:
+            time.sleep(rnd.random() * 0.005)
+            sleep_if()
+        if rnd.random() > 0.823:
+            time.sleep(rnd.random() * 0.2 + rnd.random() * 0.05)
+            if rnd.random() > 0.5:
+                time.sleep(rnd.random() * 0.13)
+    else:
+        time.sleep(hold)
+    pag.mouseUp(button='left') # Lift right button up (Finish click)
     quick_sleep()
-    pag.click()
+
+def right_click(hold =0.1, randomize = True):
+    pag.mouseDown(button='right')  # Press the right button down
+    if randomize:
+        sleep(hold, hold/2 , hold/3)
+        if rnd.random() > 0.618:
+            time.sleep(rnd.random() * 0.05)
+        if rnd.random() > 0.11:
+            time.sleep(rnd.random() * 0.005)
+            sleep_if()
+        if rnd.random() > 0.823:
+            time.sleep(rnd.random() * 0.3 + rnd.random() * 0.1)
+    else:
+        time.sleep(hold)
+    pag.mouseUp(button='right') # Lift right button up (Finish click)
     sleep()
 
-def click(hold = 0.013):
-    pag.mouseDown(button='left')  # Press the right button down
-    sleep(hold)
-    time.sleep(rnd.random() * hold/10)
-    time.sleep(rnd.random() * 0.05)
-    sleep_if()
-    if rnd.random() > 0.6:
-        time.sleep(rnd.random() * 0.05)
-    pag.mouseUp(button='left') # Lift right button up (Finish click)
-    quick_sleep()
+def upkey(hold = 1, randomize = False): #Hold the up key to adjust the camera view
+    pag.keyDown('up')
+    if randomize:
+        sleep(hold, hold/2 , hold/3)
+        if rnd.random() > 0.618:
+            time.sleep(rnd.random() * 0.05)
+        if rnd.random() > 0.11:
+            time.sleep(rnd.random() * 0.005)
+            sleep_if()
+        if rnd.random() > 0.823:
+            time.sleep(rnd.random() * 0.3 + rnd.random() * 0.1)
+    else:
+        time.sleep(hold)
+    pag.keyUp('up')
+    sleep()
 
-def hold_click(hold = 0.53):
-    pag.mouseDown(button='left')  # Press the right button down
-    sleep(hold)
-    time.sleep(rnd.random() * hold/10)
-    if rnd.random() > 0.6:
-        time.sleep(rnd.random() * hold/9)
-    sleep_if()
-    pag.mouseUp(button='left') # Lift right button up (Finish click)
-    quick_sleep()
+#Define downkey function
+
+def downkey(hold =2, randomize = False): #Hold the down key to adjust camera view
+    pag.keyDown('down')
+    if randomize:
+        if rnd.random() > 0.118:
+            time.sleep(rnd.random() / 10 * hold)
+            sleep_if()
+        sleep(hold, hold/8 , hold/10)
+    else:
+        sleep(hold, hold/10, hold/100)
+    pag.keyUp('down')
+    sleep()
+
+#Define a function that will push down the left key for 3 seconds, then release it.
+
+def leftkey(hold = .5, randomize = False):
+    pag.keyDown('left')
+    if randomize:
+        if rnd.random() > 0.118:
+            time.sleep(rnd.random() / 10 * hold)
+            sleep_if()
+        sleep(hold, hold/3 , hold/7)
+    else:
+        sleep(hold, hold/10, hold/100)
+    pag.keyUp('left')
+    sleep()
+
+def spacekey(hold = .1, randomize = True):
+    pag.keyDown('space')
+    if randomize:
+        if rnd.random() > 0.118:
+            time.sleep(rnd.random() / 10 * hold)
+            sleep_if()
+        sleep(hold, hold/3 , hold/8)
+    else:
+        sleep(hold, hold/10, hold/100)
+    pag.keyUp('space')
+    sleep() 
+
+def onekey(hold = .1, randomize = True):
+    pag.keyDown('1')
+    if randomize:
+        if rnd.random() > 0.118:
+            time.sleep(rnd.random() / 10 * hold)
+            sleep_if()
+        sleep(hold, hold/3 , hold/7)
+    else:
+        sleep(hold, hold/10, hold/100)
+    pag.keyUp('1')
+    sleep()
+
+def twokey(hold = .1, randomize = True):
+    pag.keyDown('2')
+    if randomize:
+        if rnd.random() > 0.118:
+            time.sleep(rnd.random() / 10 * hold)
+            sleep_if()
+        sleep(hold, hold/3 , hold/3)
+    else:
+        sleep(hold, hold/10, hold/100)
+    pag.keyUp('2')
+    sleep()
+
+def threekey(hold = .1, randomize = True):
+    pag.keyDown('3')
+    if randomize:
+        if rnd.random() > 0.118:
+            time.sleep(rnd.random() / 10 * hold)
+            sleep_if()
+        sleep(hold, hold/2 , hold/3)
+    else:
+        sleep(hold, hold/10, hold/100)
+    pag.keyUp('3')
+    sleep()
+
+def left_ctrl(hold = .3, randomize = True):
+    if randomize:
+        if rnd.random() > 0.118:
+            time.sleep(rnd.random() / 10 * hold)
+            sleep_if()
+        sleep(hold, hold/2 , hold/3)
+    else:
+        sleep(hold, hold/10, hold/100)
+    sleep()
+
+def right_ctrl(hold = .3, randomize = True):
+    pag.keyDown('right ctrl')
+    if randomize:
+        if rnd.random() > 0.118:
+            time.sleep(rnd.random() / 10 * hold)
+            sleep_if()
+        sleep(hold, hold/2 , hold/5)
+    else:
+        sleep(hold, hold/9, hold/100)
+    pag.keyUp('right ctrl')
+    sleep()
 
 def double_click():
     pag.double_click()
 
-def click_and_hold():
-    pag.click(button='left', clicks=2, interval=0.08)
-
 # Only run this if the script is run directly
 if __name__ == "__main__":
     print("Starting click")
-    click_between(0.1, 1)
+    click(0.1, 1)
     print("Done!")
     sleep() #sleep for 1 second

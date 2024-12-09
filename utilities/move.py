@@ -1,6 +1,5 @@
 #mouse movement module
-
-from timmy import *
+from .timmy import *
 import pyautogui as pag
 
 #define the move function

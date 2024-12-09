@@ -8,6 +8,7 @@ sys.path.insert(0, project_root)
 #you can import other modules here
 from utilities.timmy import *
 from utilities.welcome import *
+from utilities.clicker import *
 
 welcome()
 sleep()

@@ -9,7 +9,6 @@ from utilities.timmy import *
 from utilities.welcome import *
 
 sleep()
-welcomer = Welcomer()
 
 print("Helloooo World")  
-welcomer.welcome()
+welcome()

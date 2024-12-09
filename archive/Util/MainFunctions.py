@@ -37,30 +37,23 @@ def sleepif(x=0.01):
         time.sleep(rnd.random() *0.3 + 0.01)
 
 #Define a more human like click.
-def click(hold = 0):
+def click(hold = 0.013):
     pag.mouseDown(button='left')  # Press the right button down
-    sleep(hold)
+    sleep(hold, hold/8, hold/10)
     sleepif()
     pag.mouseUp(button='left') # Lift right button up (Finish click)
     sleep()
 
-def quick_click(): #Another Left Click variant
-    pag.mouseDown(button='left')  # press the right button down
-    sleepif()
-    pag.mouseUp(button='left')
-    #Hold the mouse down for a period of time rather a simple click
-    sleep()
-
-def right_click(hold =0.01):
+def right_click(hold =0.1):
     pag.mouseDown(button='right')  # Press the right button down
+    sleep(hold, hold/8, hold/10)
     sleepif()
-    sleep(hold)
     pag.mouseUp(button='right') # Lift right button up (Finish click)
     sleep()
 
-def upkey(hold = 2): #Hold the up key to adjust the camera view
+def upkey(hold = 1): #Hold the up key to adjust the camera view
     pag.keyDown('up')
-    sleep(hold, .01, .001)
+    sleep(hold, .01, .01)
     pag.keyUp('up')
     sleep()
 
@@ -74,9 +67,9 @@ def downkey(hold =2): #Hold the down key to adjust camera view
 
 #Define a function that will push down the left key for 3 seconds, then release it.
 
-def leftkey(x = 1):
+def leftkey(x = .5):
     pag.keyDown('left')
-    sleep(x, .001, .001)
+    sleep(x, .01, .01)
     pag.keyUp('left')
     sleep()
 
@@ -86,21 +79,21 @@ def spacekey(x = .1, x1 = .1, x2 = .1):
     pag.keyUp('space')
     sleep() 
 
-def onekey(x = 1):
+def onekey(x = .5):
     pag.keyDown('1')
-    sleep(x, .001, .001)
+    sleep(x, .01, .01)
     pag.keyUp('1')
     sleep()
 
-def twokey(x = 1):
+def twokey(x = .5):
     pag.keyDown('2')
-    sleep(x, .001, .001)
+    sleep(x, .01, .01)
     pag.keyUp('2')
     sleep()
 
-def threekey(x = 1):
+def threekey(x = .5):
     pag.keyDown('3')
-    sleep(x, .001, .001)
+    sleep(x, .01, .01)
     pag.keyUp('3')
     sleep()
 
