@@ -8,10 +8,23 @@ sys.path.insert(0, project_root)
 #you can import other modules here
 from utilities.timmy import *
 from utilities.welcome import *
+from utilities.movements import *
 import pyautogui as pag
 
 
 welcome()
 sleep()
 print("hello from test.py")  
-pag.confirm("Press OK to continue")
+move_to(duration = 0.001)
+move_to(duration = 0.001)
+move_to(duration = 0.001)
+move_to(duration = 0.001)
+move_to(duration = 0.001)
+move_to(duration = 0.001)
+move_to(duration = 0.001)
+move_to(duration = 0.001)
+move_to(duration = 0.001)
+move_to(duration = 0.001)
+
+
+

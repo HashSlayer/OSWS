@@ -4,24 +4,36 @@ import time as time
 import pyautogui as pag
 from .timmy import *
 
+pag.MINIMUM_DURATION = 0
+pag.MINIMUM_SLEEP = 0
+pag.PAUSE = 0
 
-def click(hold = 0.001, randomize = True):
+def click(hold = 0.01, randomize = True):
     pag.mouseDown(button='left')  # Press the right button down
     if randomize:
         sleep(hold, hold/2 , hold/3)
         if rnd.random() > 0.618:
-            time.sleep(rnd.random() * 0.05)
+            time.sleep(rnd.random() * 0.005)
         if rnd.random() > 0.11:
             time.sleep(rnd.random() * 0.005)
             sleep_if()
+        if rnd.random() > 0.995:
+            time.sleep(rnd.random() * 0.2)
         if rnd.random() > 0.823:
-            time.sleep(rnd.random() * 0.2 + rnd.random() * 0.05)
-            if rnd.random() > 0.5:
+            time.sleep(rnd.random() * 0.2 + rnd.random() * 0.07)
+            if rnd.random() > 0.42:
                 time.sleep(rnd.random() * 0.13)
     else:
         time.sleep(hold)
     pag.mouseUp(button='left') # Lift right button up (Finish click)
     quick_sleep()
+
+def quick_click(hold = 0.1):
+    
+    pag.mouseDown(button='left')  # Press the left button down
+    if rnd.random() > 0.2:
+        time.sleep(rnd.random() * hold)
+    pag.mouseUp(button='left')    # Lift left button up (Finish click)
 
 def right_click(hold =0.1, randomize = True):
     pag.mouseDown(button='right')  # Press the right button down

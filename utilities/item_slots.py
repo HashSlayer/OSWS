@@ -2,6 +2,7 @@ import random as rnd
 from .timmy import *
 from .movements import *
 from .clicker import *
+import tkinter as tk
 
 
 def inv_slot(slot = 1, time_multiplier = 1, sleep_for = .01, sleep_upto = .01, x = 1625, y=638, z=10): #Can +/- 20 pixels and be fine. X and Y is the middle of the first slot in the inventory 
@@ -87,3 +88,18 @@ def get_all_items(x1 = -30, x2 = 20, y1 = 132, y2 = 136, time= rnd.random() * 0.
     else:
         bezier_relative(x1, x2, y1+1, y2-1, time) #move mouse down to quantity of X
     sleep(.05, pause_upto, .02) #sleep
+
+    def get_screen_dimensions():
+        root = tk.Tk()
+        width = root.winfo_screenwidth()
+        height = root.winfo_screenheight()
+        root.destroy()
+        return width, height
+
+    def suggest_inventory_scaling():
+        print("Suggested inventory scaling: 45%")
+
+    if __name__ == "__main__":
+        width, height = get_screen_dimensions()
+        print(f"Screen dimensions: {width}x{height}")
+        suggest_inventory_scaling()

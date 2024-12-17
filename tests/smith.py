@@ -1,13 +1,23 @@
+#Use this file template to set the path to the project root directory
+
+import os
+import sys
 import threading
-import time
-import pyautogui as pag
 import random as rnd
 from pynput import keyboard
-
-from ItemSlots import *
-from MainFunctions import *
-from MouseMovement import *
-from Welcome import *
+from datetime import datetime
+# Get the absolute path to the project root directory
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# Add the project root to the Python path
+sys.path.insert(0, project_root)
+#import other relevant modules here:
+#from Utilities.timmy import *
+from utilities.timmy import *
+from utilities.welcome import *
+from utilities.movements import *
+from utilities.clicker import *
+from utilities.item_slots import *
+from utilities.gui.confetti import *
 
 welcome()
 
@@ -46,13 +56,13 @@ def walker():
         click()
         sleep(0.1, 1) 
         if rnd.random() > 0.813:
-            Notbotting2()
+            Notbotting()
 
         bank_slot(7)
         sleep()
         click()
         if rnd.random() > 0.913:
-            Notbotting2()
+            Notbotting()
         sleep()
         if rnd.random() > 0.813:
             sleep(0,3)
@@ -72,7 +82,7 @@ def walker():
         Notbotting()
         sleep(4, 2)
         if rnd.random() > 0.813:
-            Notbotting2()
+            Notbotting()
 
         spacekey()
         if rnd.random() > 0.7:
@@ -83,7 +93,7 @@ def walker():
                 spacekey()
 
         Notbotting()
-        sleep(12 , 4)
+        sleep(62 , 8)
 
         sleep()
         if rnd.random() > 0.9:

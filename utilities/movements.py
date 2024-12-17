@@ -4,15 +4,21 @@ import random as rnd
 import math
 from .timmy import *
 
+pag.MINIMUM_DURATION = 0
+pag.MINIMUM_SLEEP = 0
+pag.PAUSE = 0
+
 #define the move function
 def simple_move(x, y):
     #move the mouse to the x and y coordinates
     pag.moveTo(x, y)
 
-def move_to(x, y):
-    quick_sleep()
-    pag.moveTo(x, y)
-    sleep()
+def move_to(x = 900, y = 600, duration = 0.3):
+    # x, and y are set to random values between 0 and 1920, and 0 and 1080
+    x = rnd.randint(400, 1600)
+    y = rnd.randint(400, 900)
+    duration = rnd.random() * 0.3 + 0.1
+    bezierMove(x, y, duration)
 
 #Moving into bezierMove we aim to use multiple bezier curves to move the mouse in a more human like fashion, with dynamic speed and acceleration.
 def quadratic_bezier(p0, p1, p2, t):

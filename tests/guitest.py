@@ -140,8 +140,8 @@ class GGui:
         self.pane.add(self.text_box, stretch="always")  # Add to the pane with stretch option
         self.text_box.insert(tk.END, " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
         self.text_box.insert(tk.END, "      Welcome                                       \n")                         # Prepopulate with a welcome message
-        self.text_box.insert(tk.END, "    ❤️ Press the [left alt] key to toggle the bot OFF/ON ; or (START/STOP)  \n")  # Prepopulate with a welcome message
-        self.text_box.insert(tk.END, "    ❤️ Press the [right alt] key to Kill the bot                            \n")  # Prepopulate with a welcome message
+        self.text_box.insert(tk.END, "    ❤️ Press the [left CTRL] key to toggle the bot OFF/ON ; or (START/STOP)  \n")  # Prepopulate with a welcome message
+        self.text_box.insert(tk.END, "    ❤️ Press the [right CTRL] key to Kill the bot                            \n")  # Prepopulate with a welcome message
         self.text_box.insert(tk.END, "    ❤️ Enjoy your walk!                                                     \n")  # Prepopulate with a welcome message
         self.text_box.insert(tk.END, " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")  # Prepopulate with a welcome message
 
