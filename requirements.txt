@@ -1,4 +1,15 @@
-pyautogui==0.9.54
-pynput==1.7.6
-mouse==0.7.1
+# GUI and Mouse Control
+pyautogui==0.9.54  # Mouse movement and control
+mouse==0.7.1       # Additional mouse functionality
+pynput==1.7.6      # Keyboard and mouse monitoring
+
+# Note: The following are part of Python's standard library and don't need to be installed:
+# - tkinter (GUI)
+# - threading (Concurrency)
+# - datetime (Date/time operations)
+# - random (Random number generation)
+# - time (Time-related functions)
+# - math (Mathematical operations)
+# - os (Operating system interface)
+# - sys (System-specific parameters)
 

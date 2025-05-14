@@ -22,7 +22,7 @@ from utils.gui.confetti import *
 # Global variables
 running = False
 running_lock = threading.Lock()
-bot_thread = threading.Thread(target=lambda: winer(gui), daemon=True)
+bot_thread = threading.Thread(target=lambda: walker(gui), daemon=True)
 click_count, max_clicks, click_interval, interval_variance, = 1, 420, 1, 0.1
 
 # Define your special keys
@@ -171,20 +171,38 @@ class GGui:
 
 
     def kill_bot(self):
+        """Properly cleanup and exit the bot."""
         global running, bot_thread
         # Immediate UI feedback to indicate shutdown is in progress
-        # Disable click tracking UI update
         self.click_tracking_enabled = False
         running = False
+        
+        # Update UI elements
         self.toggle_button.config(text=" Track Clicks: OFF ", bg="#FF6B6B")
         self.start_button.config(text="    START    ", bg="#2ECC73", fg='#97E469')
+        self.kill_button.config(text="KILLED", state=tk.NORMAL)
+        
         # GUI-specific logic
         self.start_confetti_animation()
-        # Ensure this operation is safe and necessary
-        right_ctrl()
-        # Restore the kill button state after shutdown process
-        self.kill_button.config(text="KILLED", state=tk.NORMAL)
-
+        self.append_message("Bot killed! Cleaning up...")
+        
+        # Clean up threads
+        if bot_thread and bot_thread.is_alive():
+            try:
+                bot_thread.join(timeout=1.0)
+            except Exception as e:
+                print(f"Exception while stopping bot_thread: {e}")
+        
+        if self.click_tracker_thread and self.click_tracker_thread.is_alive():
+            try:
+                self.click_tracker_thread.join(timeout=1.0)
+            except Exception as e:
+                print(f"Exception while stopping click_tracker_thread: {e}")
+        
+        # Save state and destroy GUI
+        self.save_text()
+        print("Exiting... Text File saved <3")
+        self.root.after(500, self.root.destroy)  # Give time for final UI updates
 
 
     def append_message(self, message):
@@ -206,7 +224,7 @@ class GGui:
                 gui.start_button.config(text="       STOP       ", bg="#FF6B6B", fg='#97E469')  # Update button appearance while running
                 if bot_thread is None or not bot_thread.is_alive():
                     # Start a new thread for the bot if not already running
-                    bot_thread = threading.Thread(target=lambda: winer(gui), daemon=True)
+                    bot_thread = threading.Thread(target=lambda: walker(gui), daemon=True)
                     bot_thread.start()
 
     def track_clicks(self):
@@ -373,7 +391,7 @@ class GGui:
 #  =========================================== | End of GUI Class | ===========================================
         
 #WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW        
-def winer(gui):
+def walker(gui):
     while True:
         if running:
             global click_count, max_clicks, click_interval, interval_variance
@@ -475,7 +493,7 @@ def winer(gui):
 
 #WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW            
 
-def toggle_winer_key(key, gui):
+def toggle_walker_key(key, gui):
     global running, bot_thread
     if key == ONOFF:
         with running_lock:  # Ensure thread-safe access to the 'running' variable
@@ -491,19 +509,15 @@ def toggle_winer_key(key, gui):
                 gui.start_button.config(text="     START     ", bg="#09C159", fg='#97E469')  # Update button appearance while not running
                 if bot_thread is None or not bot_thread.is_alive():
                     # Start a new thread for the bot if not already running
-                    bot_thread = threading.Thread(target=lambda: winer(gui), daemon=True)
+                    bot_thread = threading.Thread(target=lambda: walker(gui), daemon=True)
                     bot_thread.start()
     elif key == KILL:
-        # Handle the kill switch
-        print("Kill switch activated")  # Log to the console
-        gui.append_message("You killed it!")  # Update GUI with the termination message
-        gui.start_confetti_animation()  # Trigger confetti animation as a visual feedback
-        running = False  # Stop the bot's operation
-        sys.exit()  # Exit the application
+        # Handle the kill switch by calling the GUI's kill_bot method
+        gui.kill_bot()
 
 if __name__ == "__main__":
     gui = GGui()
-    listener_thread = threading.Thread(target=lambda: Listener(on_press=lambda key: toggle_winer_key(key, gui)).start())
+    listener_thread = threading.Thread(target=lambda: Listener(on_press=lambda key: toggle_walker_key(key, gui)).start())
     listener_thread.start()
     gui.run()
     listener_thread.join()

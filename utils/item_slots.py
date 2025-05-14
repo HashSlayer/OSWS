@@ -10,7 +10,6 @@ from pynput.keyboard import Key
 #The scaling plugin should be used to scale the inventory slots to 45% as well. 
 
 
-
 def inv_slot(slot = 1, time_multiplier = 1, x = 1625, y=638, z=10): #Can +/- 20 pixels and be fine. X and Y is the middle of the first slot in the inventory 
     slot -= 1
     row = slot // 4

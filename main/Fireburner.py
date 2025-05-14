@@ -24,9 +24,10 @@ welcome()
 #First stand in front of the most south eastern banker and light a campfire below your player for this to work.
 
 
-# Global variables to control the clicker state
+# Global variables to control the bot state
 running = False
 running_lock = threading.Lock()
+bot_thread = None  # Track the bot thread globally
 
 # Define control keys
 ONOFF = Key.ctrl_l  # Left Control key for toggle
@@ -41,8 +42,7 @@ loops = 0
 
 def walker():
     """Loop that performs clicks at a fixed interval while running is True."""
-    global running
-    global loops
+    global running, loops
     while True:
         with running_lock:
             if not running:
@@ -99,35 +99,51 @@ def walker():
 # Main Program
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def toggle_program():
-    """Toggle the running state and start/stop the program."""
-    global running
-    with running_lock:
-        running = not running
-        if running:
-            threading.Thread(target=walker, daemon=True).start()
-        print("Program running" if running else "Program stopped")
-
-def exit_program():
-    """Exit the program by setting running to False and printing a message."""
-    global running
-    with running_lock:
-        running = False
-    print("Exiting program")
-    exit(0)
+def kill_bot():
+    """Properly cleanup and exit the bot."""
+    global running, bot_thread
+    running = False
+    
+    # Clean up threads
+    if bot_thread and bot_thread.is_alive():
+        try:
+            bot_thread.join(timeout=1.0)
+        except Exception as e:
+            print(f"Exception while stopping bot_thread: {e}")
+    
+    print("Bot killed! Cleaning up...")
+    sys.exit(0)
 
 def on_press(key):
-    """Handle key press events to toggle the clicker or exit the program."""
+    """Handle keyboard events."""
     if key == ONOFF:
         toggle_program()
     elif key == KILL:
-        exit_program()
+        kill_bot()
+        return False  # Stop listener
+
+def toggle_program():
+    """Toggle the running state and start/stop the program."""
+    global running, bot_thread
+    with running_lock:
+        running = not running
+        if running:
+            if bot_thread is None or not bot_thread.is_alive():
+                bot_thread = threading.Thread(target=walker, daemon=True)
+                bot_thread.start()
+            print("Bot started")
+        else:
+            print("Bot stopped")
 
 def main():
     """Main function to start the keyboard listener."""
-    listener = Listener(on_press=on_press)
+    # Start listener in daemon mode for clean exit
+    listener = Listener(on_press=on_press, daemon=True)
     listener.start()
-    listener.join()
+    try:
+        listener.join()
+    except KeyboardInterrupt:
+        kill_bot()
 
 if __name__ == "__main__":
     main()

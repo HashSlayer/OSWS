@@ -18,145 +18,103 @@ from utils.movements import *
 from utils.clicker import *
 from utils.item_slots import *
 from utils.gui.confetti import *
+from utils.gui.base_bot_gui import BaseBotGUI
 
 welcome()
 
-# Global variables to control the clicker state
+# Global variables to control the bot state
 running = False
 running_lock = threading.Lock()
+bot_thread = None  # Track the bot thread globally
+loops = 0  # Keep track of loops in the bot logic
 
-# Define control keys
-ONOFF = Key.ctrl_l  # Left Control key for toggle
-KILL = Key.ctrl_r   # Right Control key for kill
-
-loops = 0
-
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Walker Program
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-def walker():
-    """Loop that performs clicks at a fixed interval while running is True."""
-    global running
-    global loops
-    while True:
-        with running_lock:
-            if not running:
+class SmitherGUI(BaseBotGUI):
+    def __init__(self):
+        super().__init__(bot_name="Smither Bot", bot_function=self.walker)
+        
+    def walker(self, gui):
+        """Loop that performs clicks at a fixed interval while running is True."""
+        global loops
+        while True:
+            if not self.running:
                 break
 
-        sleep(1, 1)
-        print("Starting Smithing Sequence")
-        bezier_between(886, 893, 281, 289) #clicking on the bank is slightly off
-        sleep(.5, 2)
-        click()
-        sleep()
-        if rnd.random() > 0.843:
-            sleep(0,3)
+            sleep(1, 1)
+            gui.append_message("Starting Smithing Sequence")
+            bezier_between(886, 893, 281, 289) #clicking on the bank is slightly off
+            sleep(.5, 2)
+            click()
+            sleep()
+            if rnd.random() > 0.843:
+                sleep(0,3)
 
-        sleep(4, 3)
-        #deposit_all()
-        #sleep()
-        #click()
-        #sleep(0.1, 1) 
-        if rnd.random() > 0.913:
-            Notbotting()
+            sleep(4, 3)
+            if rnd.random() > 0.913:
+                Notbotting()
 
-        #bank_slot(7)
-        #sleep()
-        #click()
-        #if rnd.random() > 0.913:
-        #    Notbotting()
-        #sleep()
-        #if rnd.random() > 0.813:
-        #    sleep(0,3)
+            bank_slot(8)
+            sleep()
+            get_x_items()
+            sleep()
+            click()
+            sleep(.1,1)
+            if rnd.random() > 0.97:
+                sleep(0,30)
+            if rnd.random() > 0.813:
+                sleep(0,3)
 
-        bank_slot(8)
-        sleep()
-        get_x_items()
-        sleep()
-        click()
-        sleep(.1,1)
-        if rnd.random() > 0.97:
-            sleep(0,30)
-        if rnd.random() > 0.813:
-            sleep(0,3)
+            bezier_between(1065, 1075, 894, 910)
+            sleep(0.2, 1)
+            click()
+            sleep(3.9, 2.5)
+            if rnd.random() > 0.9813:
+                Notbotting()
 
-        bezier_between(1065, 1075, 894, 910)
-        sleep(0.2, 1)
-        click()
-        sleep(3.9, 2.5)
-        if rnd.random() > 0.9813:
-            Notbotting()
-
-        spacekey()
-        sleep(.413, 0.5)
-        spacekey()
-
-        if rnd.random() > 0.7:
-            sleep(0,1)
             spacekey()
-            if rnd.random() > 0.93:
-                sleep()
+            sleep(.413, 0.5)
+            spacekey()
+
+            if rnd.random() > 0.7:
+                sleep(0,1)
                 spacekey()
+                if rnd.random() > 0.93:
+                    sleep()
+                    spacekey()
 
-        Notbotting()
-        sleep(65, 9, 7)
-        if rnd.random() > 0.813:
-            sleep(0,18)
+            Notbotting()
+            sleep(65, 9, 7)
+            if rnd.random() > 0.813:
+                sleep(0,18)
 
-        if rnd.random() > 0.93:
-            sleep(0,30)
-            if rnd.random() > 0.911:
-                sleep(10, 130, 180)
-                print("Bigger Sleep")
-        if loops > 30 and rnd.random() > 0.9891:
-            sleep(10, 60, 120)
-            print("Biggest Sleep")
+            if rnd.random() > 0.93:
+                sleep(0,30)
+                if rnd.random() > 0.911:
+                    sleep(10, 130, 180)
+                    gui.append_message("Taking a bigger sleep...")
 
-        loops += 1
-        print("Completed Sequence", loops, "times")
+            if loops > 30 and rnd.random() > 0.9891:
+                sleep(10, 60, 120)
+                gui.append_message("Taking the biggest sleep...")
 
+            loops += 1
+            # Update both the bot's loop count and the GUI's walk count
+            self.walk_count = loops  # Keep GUI in sync with bot state
+            gui.append_message(f"Completed Sequence {loops} times")
 
-#zoomed out by 4 pixels 
-
-# Warning holding left CTRL turning the progran on and off can crash the program
-# Warning holding right CTRL will exit the program
-        
-
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Main Program
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-def toggle_program():
-    """Toggle the running state and start/stop the program."""
-    global running
-    with running_lock:
-        running = not running
-        if running:
-            threading.Thread(target=walker, daemon=True).start()
-        print("Program running" if running else "Program stopped")
-
-def exit_program():
-    """Exit the program by setting running to False and printing a message."""
-    global running
-    with running_lock:
-        running = False
-    print("Exiting program")
-    exit(0)
-
-def on_press(key):
-    """Handle key press events to toggle the clicker or exit the program."""
-    if key == ONOFF:
-        toggle_program()
-    elif key == KILL:
-        exit_program()
+            # Check if we've reached max walks
+            try:
+                max_walks = int(self.max_walks_entry.get())
+                if loops >= max_walks:
+                    gui.append_message(f"Reached maximum walks ({max_walks}). Stopping bot.")
+                    self.running = False
+                    break
+            except ValueError:
+                pass  # Invalid max walks value, continue running
 
 def main():
-    """Main function to start the keyboard listener."""
-    listener = Listener(on_press=on_press)
-    listener.start()
-    listener.join()
+    """Main function to start the GUI."""
+    gui = SmitherGUI()
+    gui.run()
 
 if __name__ == "__main__":
     main()
