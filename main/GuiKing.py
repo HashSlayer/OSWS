@@ -1,4 +1,3 @@
-#Use this file template to set the path to the project root directory
 
 import os
 import sys
@@ -24,28 +23,25 @@ from utils.gui.confetti import *
 # Global variables
 running = False
 running_lock = threading.Lock()
-bot_thread = threading.Thread(target=lambda: walker(gui), daemon=True)
+bot_thread = threading.Thread(target=lambda: winer(gui), daemon=True)
 click_count, max_clicks, click_interval, interval_variance, = 1, 420, 1, 0.1
 
 # Define your special keys
-ONOFF = Key.ctrl_l  # Left Alt key for toggling on/off
-KEY = Key.ctrl_r  # Right Alt key to exit the program
+ONOFF = Key.alt_l  # Left Alt key for toggling on/off
+KEY = Key.alt_r  # Right Alt key to exit the program
 
 welcome()
 
 # =======================================================================================================================
-# Functionse
+# Functions
 # =======================================================================================================================
 
-def simulated_pause():
-    if (rnd.random() > 0.3):
+def SimulatedPause(): #Example of a function
+    global click_count
+    if (rnd.random() > 0.8):
         sleep(.01, 1)
-        if (rnd.random() > 0.6):
+        if (rnd.random() > 0.8):
             sleep(.01, 5)
-            if (rnd.random() > 0.6):
-                sleep(.01, 5)
-                if (rnd.random() > 0.7):
-                    sleep(.01, 5)
 
 # [~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GUI Class ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~]
 #GGui
@@ -73,7 +69,8 @@ class GGui:
         self.random_sleep_enabled = False  # Initialize random sleep flag
         self.spam_clicks_enabled = False
         self.double_click_enabled = False
-        self.double_click_wait = tk.DoubleVar(value=0.69)
+        self.alchemy_interval_cycles = False
+        self.double_click_wait = tk.DoubleVar(value=0.9)
         # Load text from file when initializing
         self.load_text()
 
@@ -140,8 +137,8 @@ class GGui:
         self.pane.add(self.text_box, stretch="always")  # Add to the pane with stretch option
         self.text_box.insert(tk.END, " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
         self.text_box.insert(tk.END, "      Welcome                                       \n")                         # Prepopulate with a welcome message
-        self.text_box.insert(tk.END, "    ❤️ Press the [left CTRL] key to toggle the bot OFF/ON ; or (START/STOP)  \n")  # Prepopulate with a welcome message
-        self.text_box.insert(tk.END, "    ❤️ Press the [right CTRL] key to Kill the bot                            \n")  # Prepopulate with a welcome message
+        self.text_box.insert(tk.END, "    ❤️ Press the [left alt] key to toggle the bot OFF/ON ; or (START/STOP)  \n")  # Prepopulate with a welcome message
+        self.text_box.insert(tk.END, "    ❤️ Press the [right alt] key to Kill the bot                            \n")  # Prepopulate with a welcome message
         self.text_box.insert(tk.END, "    ❤️ Enjoy your walk!                                                     \n")  # Prepopulate with a welcome message
         self.text_box.insert(tk.END, " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")  # Prepopulate with a welcome message
 
@@ -189,6 +186,8 @@ class GGui:
         # Restore the kill button state after shutdown process
         self.kill_button.config(text="KILLED", state=tk.NORMAL)
 
+
+
     def append_message(self, message):
         self.text_box.insert(tk.END, message + '\n')  # Insert the message at the end of the text box
         self.text_box.see(tk.END)  # Scroll to the end of the text box to make the message visible
@@ -208,7 +207,7 @@ class GGui:
                 gui.start_button.config(text="       STOP       ", bg="#FF6B6B", fg='#97E469')  # Update button appearance while running
                 if bot_thread is None or not bot_thread.is_alive():
                     # Start a new thread for the bot if not already running
-                    bot_thread = threading.Thread(target=lambda: walker(gui), daemon=True)
+                    bot_thread = threading.Thread(target=lambda: winer(gui), daemon=True)
                     bot_thread.start()
 
     def track_clicks(self):
@@ -237,6 +236,7 @@ class GGui:
             self.toggle_button.config(text=" Track Clicks: OFF ", bg="#FF6B6B")
 
 
+
     def toggle_sleeps(self):
         self.random_sleep_enabled = not self.random_sleep_enabled
         if self.random_sleep_enabled:
@@ -257,6 +257,13 @@ class GGui:
             self.spam_clicks_toggle_button.config(text="Spam Clicks: ON", bg="#2ECC71")
         else:
             self.spam_clicks_toggle_button.config(text="Spam Clicks: OFF", bg="#FF6B6B")
+        
+    def alchemy_cycles_enabled(self):
+        self.alchemy_interval_cycles = not self.alchemy_interval_cycles
+        if self.alchemy_interval_cycles:
+            self.alchemy_interval_cycles_button.config(text="Alchemy Interval Cycles: ON", bg="#2ECC71")
+        else:
+            self.alchemy_interval_cycles_button.config(text="Alchemy Interval Cycles: OFF", bg="#FF6B6B")
 
                 
     def on_close(self):
@@ -331,6 +338,10 @@ class GGui:
         toggle_frame = tk.Frame(self.root, bg=self.background_color_end)
         toggle_frame.pack(padx=10, pady=(0, 10))
 
+        # Alchemy Interval Cycles Toggle Switch
+        self.alchemy_interval_cycles_button = tk.Button(toggle_frame, text="Alchemy Interval Cycles: OFF", command=self.alchemy_cycles_enabled, bg="#FF6B6B", fg='#97E469', font=self.custom_font)
+        self.alchemy_interval_cycles_button.pack(side=tk.LEFT, padx=(10, 2))
+
         # Random Breaks Toggle Switch
         self.toggle_sleep_button = tk.Button(toggle_frame, text="Random Breaks: OFF", command=self.toggle_sleeps, bg="#FF6B6B", fg='#97E469', font=self.custom_font)
         self.toggle_sleep_button.pack(side=tk.LEFT, padx=(10, 2))
@@ -363,7 +374,7 @@ class GGui:
 #  =========================================== | End of GUI Class | ===========================================
         
 #WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW        
-def walker(gui):
+def winer(gui):
     while True:
         if running:
             global click_count, max_clicks, click_interval, interval_variance
@@ -385,27 +396,54 @@ def walker(gui):
                 print("Let's Click;", max_clicks, "times.")
 
             # Sleep logic
-            sleep(click_interval, interval_variance, 0) #Sleep for a random amount of time between click_interval +/- wait_upto
+            sleep(click_interval, interval_variance, interval_variance/113) #Sleep for a random amount of time between click_interval +/- wait_upto
             if not running:
                 break
 
             # Click action
             click()
+
+                    
             click_count += 1
             gui.append_message(f"Click #{click_count}/{max_clicks} At: {datetime.now().strftime('%H:%M:%S.%f')[:-3]}")
 
             if gui.random_sleep_enabled:
                 if rnd.random() > 0.95: #3% chance of random sleep after each click
-                    simulated_pause()
+                    SimulatedPause()
                     gui.append_message("Random Sleep Activated")
 
             if gui.double_click_enabled:
                 doubleClickWait = float(gui.double_click_wait.get())
                 if click_count % 2 == 0:
-                    sleep(interval_variance, doubleClickWait / 3, doubleClickWait / 10)
+                    sleep(doubleClickWait / 8, doubleClickWait / 3)
                     click()
                     click_count += 1
                     gui.append_message(f"Click #{click_count}/{max_clicks} At: {datetime.now().strftime('%H:%M:%S.%f')[:-3]}")
+
+            if gui.alchemy_interval_cycles:
+                if rnd.random() > 0.95:
+                    # Define the parameters for each cycle
+                    cycles = [
+                        (1.5, 0.25 + rnd.random() * 0.1, 0.8, "Alchemy Interval Cycle 1 Activated"),
+                        (1.3, 0.25 + rnd.random() * 0.05, 0.9, "Alchemy Interval Cycle 2 Activated"),
+                        (1.8, 0.3 + rnd.random() * 0.1, 0.4, "Alchemy Interval Cycle 3 Activated"),
+                        (1.4 + rnd.random() * 0.5, 0.2 + rnd.random() * 0.2, 0.45 + rnd.random() * 0.3, "Alchemy Interval Cycle 4 Activated")
+                    ]
+
+                    if rnd.random() > 0.95:
+                        gui.append_message("Alchemy Interval Cycles Activated")
+                        selected_cycle = rnd.choice(cycles)
+                        click_interval, interval_variance, doubleClickWait, message = selected_cycle
+                        gui.append_message(message)
+                        return click_interval, interval_variance, doubleClickWait
+
+                    GGui.double_click_wait_entry.delete(0, tk.END)
+                    GGui.double_click_wait_entry.insert(0, doubleClickWait)
+                    GGui.click_interval.delete(0, tk.END)
+                    GGui.click_interval.insert(0, click_interval)
+                    GGui.click_variance.delete(0, tk.END)
+                    GGui.click_variance.insert(0, interval_variance)
+                    return None, None, None  # Default return if no cycle is activated
 
             if gui.spam_clicks_enabled:
                 if rnd.random() > 0.97: 
@@ -414,8 +452,6 @@ def walker(gui):
                             if rnd.random() > 0.1:
                                 click()
                                 sleep(0.001, 0.1)
-                                if rnd.random() > 0.95:
-                                    simulated_pause()
                                 gui.append_message(f"You have encountered a spam click! hit {i} times!")
                     else:
                         for i in range(0, rnd.randint(2, 9)):
@@ -440,7 +476,7 @@ def walker(gui):
 
 #WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW            
 
-def toggle_walker_key(key, gui):
+def toggle_winer_key(key, gui):
     global running, bot_thread
     if key == ONOFF:
         with running_lock:  # Ensure thread-safe access to the 'running' variable
@@ -456,7 +492,7 @@ def toggle_walker_key(key, gui):
                 gui.start_button.config(text="     START     ", bg="#09C159", fg='#97E469')  # Update button appearance while not running
                 if bot_thread is None or not bot_thread.is_alive():
                     # Start a new thread for the bot if not already running
-                    bot_thread = threading.Thread(target=lambda: walker(gui), daemon=True)
+                    bot_thread = threading.Thread(target=lambda: winer(gui), daemon=True)
                     bot_thread.start()
     elif key == KEY:
         # Handle the kill switch
@@ -468,7 +504,7 @@ def toggle_walker_key(key, gui):
 
 if __name__ == "__main__":
     gui = GGui()
-    listener_thread = threading.Thread(target=lambda: Listener(on_press=lambda key: toggle_walker_key(key, gui)).start())
+    listener_thread = threading.Thread(target=lambda: Listener(on_press=lambda key: toggle_winer_key(key, gui)).start())
     listener_thread.start()
     gui.run()
     listener_thread.join()

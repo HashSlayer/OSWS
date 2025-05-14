@@ -2,7 +2,7 @@
 
 import time as time
 import pyautogui as pag
-from .timmy import *
+from .core.timing import *
 
 pag.MINIMUM_DURATION = 0
 pag.MINIMUM_SLEEP = 0

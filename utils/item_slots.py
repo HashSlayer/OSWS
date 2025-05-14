@@ -1,5 +1,5 @@
 import random as rnd
-from .timmy import *
+from .core.timing import *
 from .movements import *
 from .clicker import *
 import tkinter as tk
@@ -133,7 +133,7 @@ def deposit_all(x=1030, y=760, size=9, time = rnd.randint(30, 45)/100, pause_upt
 
 
 #RELATIVE MOVEMENT
-def get_x_items(x1 = -30, x2 = 20, y1 = 93, y2 = 97, time= rnd.random() * 0.2 + rnd.randint(23, 39)/100, pause_upto=.2):
+def get_x_items(x1 = -30, x2 = 20, y1 = 93, y2 = 97, time= rnd.random() * 0.1 + rnd.randint(13, 39)/100, pause_upto=.2):
     sleep(.03, .09) #sleep
     right_click() #right click
     if (rnd.random() > 0.69420): # REFINED WAY TO LOCALIZE LOCATIONS

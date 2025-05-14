@@ -34,7 +34,7 @@ KEY = Key.ctrl_r  # Right Alt key to exit the program
 welcome()
 
 # =======================================================================================================================
-# Functionse
+# Functions
 # =======================================================================================================================
 
 def simulated_pause():
@@ -370,7 +370,7 @@ def walker(gui):
             # Retrieve values from entry widgets
             try:
                 max_clicks = int(gui.max_clicks_entry.get())
-                click_interval = (float(gui.click_interval.get()) -.2) #Subtract .2 to account for the average time it takes to click
+                click_interval = (float(gui.click_interval.get()) -.1) #Subtract .2 to account for the average time it takes to click
                 click_interval = max(0, click_interval)  # Ensure non-negative
                 interval_variance = float(gui.click_variance.get())
                 interval_variance = max(0, interval_variance)  # Ensure non-negative
@@ -391,12 +391,19 @@ def walker(gui):
 
             # Click action
             click()
+            if gui.spam_clicks_enabled and rnd.random() > 0.99:
+                click(0.1, 2)
+            else:
+                click()
             click_count += 1
             gui.append_message(f"Click #{click_count}/{max_clicks} At: {datetime.now().strftime('%H:%M:%S.%f')[:-3]}")
 
             if gui.random_sleep_enabled:
                 if rnd.random() > 0.95: #3% chance of random sleep after each click
                     simulated_pause()
+                    if rnd.random() > 0.99 and click_count > click_count / 2:
+                        sleep(0.1, 5, 10)
+                        print("15 Second Random Sleep Activated")
                     gui.append_message("Random Sleep Activated")
 
             if gui.double_click_enabled:
@@ -423,12 +430,19 @@ def walker(gui):
                                 click()
                                 sleep(0.001, 0.1)
                                 gui.append_message(f"You have encountered a spam click! hit {i} times!")
+                else:
+                    if rnd.random() > 0.99:
+                        for i in range(0, rnd.randint(1, 4)):
+                            if rnd.random() > 0.13:
+                                click()
+                                sleep(0.1, click_interval * 3)
+                                gui.append_message(f"You have encountered a spam click interval hit! hit {i} times!")
 
 
             # Confetti animation and message every "100 clicks"
-            if (click_count - 1) % 100 == 0: # Subtract 1 from click_count to account for the initial click
-                gui.append_message(f"❤️ =================={click_count}======================== ❤️")
-                gui.start_confetti_animation()
+            # if (click_count - 1) % 100 == 0: # Subtract 1 from click_count to account for the initial click
+            #     gui.append_message(f"❤️ =================={click_count}======================== ❤️")
+            #     gui.start_confetti_animation()
 
             if click_count % max_clicks == 0:  # Check if the goal has been reached
                 gui.start_confetti_animation() # Start the confetti animation

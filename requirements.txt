@@ -1,7 +1,4 @@
-pyautogui
-pynput
-tkinter
-pynput
-time
-datetime
+pyautogui==0.9.54
+pynput==1.7.6
+mouse==0.7.1
 

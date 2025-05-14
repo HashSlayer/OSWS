@@ -6,8 +6,6 @@ import threading
 import random as rnd
 from pynput.keyboard import Listener, Key
 from datetime import datetime
-import tkinter as tk
-from tkinter import ttk
 # Get the absolute path to the project root directory
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 # Add the project root to the Python path
@@ -156,126 +154,11 @@ def on_press(key):
     elif key == Key.ctrl_r:
         exit_program()
 
-class NMZGUI:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("NMZ Helper")
-        self.root.geometry("400x300")
-        
-        # Create main frame
-        self.main_frame = ttk.Frame(self.root, padding="10")
-        self.main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
-        
-        # Status indicator
-        self.status_var = tk.StringVar(value="Status: Stopped")
-        self.status_label = ttk.Label(
-            self.main_frame, 
-            textvariable=self.status_var,
-            font=("Arial", 12, "bold")
-        )
-        self.status_label.grid(row=0, column=0, pady=10)
-        
-        # Configuration frame
-        self.config_frame = ttk.LabelFrame(self.main_frame, text="Configuration", padding="5")
-        self.config_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=5)
-        
-        # Rock cake slot
-        ttk.Label(self.config_frame, text="Rock Cake Slot:").grid(row=0, column=0, padx=5)
-        self.rock_slot_var = tk.StringVar(value="1")
-        self.rock_slot_entry = ttk.Entry(
-            self.config_frame, 
-            textvariable=self.rock_slot_var,
-            width=5
-        )
-        self.rock_slot_entry.grid(row=0, column=1, padx=5)
-        
-        # Control buttons
-        self.button_frame = ttk.Frame(self.main_frame)
-        self.button_frame.grid(row=2, column=0, pady=20)
-        
-        self.start_button = ttk.Button(
-            self.button_frame,
-            text="Start (Left Ctrl)",
-            command=self.toggle_program
-        )
-        self.start_button.grid(row=0, column=0, padx=5)
-        
-        self.stop_button = ttk.Button(
-            self.button_frame,
-            text="Exit (Right Ctrl)",
-            command=self.exit_program
-        )
-        self.stop_button.grid(row=0, column=1, padx=5)
-        
-        # Stats frame
-        self.stats_frame = ttk.LabelFrame(self.main_frame, text="Statistics", padding="5")
-        self.stats_frame.grid(row=3, column=0, sticky=(tk.W, tk.E), pady=5)
-        
-        # Runtime
-        self.runtime_var = tk.StringVar(value="Runtime: 0:00:00")
-        self.runtime_label = ttk.Label(
-            self.stats_frame,
-            textvariable=self.runtime_var
-        )
-        self.runtime_label.grid(row=0, column=0, padx=5)
-        
-        # Current slots
-        self.slots_var = tk.StringVar(value="Current Slots - Overload: 1, Absorption: 9")
-        self.slots_label = ttk.Label(
-            self.stats_frame,
-            textvariable=self.slots_var
-        )
-        self.slots_label.grid(row=1, column=0, padx=5)
-        
-        # Start time for runtime calculation
-        self.start_time = None
-        
-        # Update GUI periodically
-        self.update_gui()
-    
-    def toggle_program(self):
-        global running
-        toggle_program()
-        if running:
-            self.status_var.set("Status: Running")
-            self.start_button.configure(text="Stop (Left Ctrl)")
-            if not self.start_time:
-                self.start_time = datetime.now()
-        else:
-            self.status_var.set("Status: Stopped")
-            self.start_button.configure(text="Start (Left Ctrl)")
-            self.start_time = None
-    
-    def exit_program(self):
-        self.root.quit()
-        exit_program()
-    
-    def update_gui(self):
-        if running and self.start_time:
-            runtime = datetime.now() - self.start_time
-            hours = runtime.seconds // 3600
-            minutes = (runtime.seconds % 3600) // 60
-            seconds = runtime.seconds % 60
-            self.runtime_var.set(f"Runtime: {hours}:{minutes:02d}:{seconds:02d}")
-            
-            # Update current slots
-            self.slots_var.set(
-                f"Current Slots - Overload: {current_overload_slot}, "
-                f"Absorption: {current_absorption_slot}"
-            )
-        
-        self.root.after(1000, self.update_gui)
-
 def main():
-    """Main function to start the GUI and keyboard listener."""
-    root = tk.Tk()
-    app = NMZGUI(root)
-    
-    # Start keyboard listener in a separate thread
+    """Main function to start the keyboard listener."""
     listener = Listener(on_press=on_press)
     listener.start()
-    
-    root.mainloop()
+    listener.join()
 
 if __name__ == "__main__":
     main()

@@ -20,6 +20,9 @@ from utils.item_slots import *
 from utils.gui.confetti import *
 
 welcome()
+#Fireburner is a script that burns logs at the G.E. 
+#First stand in front of the most south eastern banker and light a campfire below your player for this to work.
+
 
 # Global variables to control the clicker state
 running = False
@@ -43,72 +46,40 @@ def walker():
 
         sleep(1, 1)
         print("Starting Smithing Sequence")
-        bezier_between(886, 893, 281, 289) #clicking on the bank is slightly off
+        bezier_between(1166, 1252, 498, 572) #clicking on the bank is slightly off
         sleep(.5, 2)
         click()
         sleep()
-        if rnd.random() > 0.843:
+        if rnd.random() > 0.813:
             sleep(0,3)
-
-        sleep(4, 3)
-        #deposit_all()
-        #sleep()
-        #click()
-        #sleep(0.1, 1) 
-        if rnd.random() > 0.913:
-            Notbotting()
-
-        #bank_slot(7)
-        #sleep()
-        #click()
-        #if rnd.random() > 0.913:
-        #    Notbotting()
-        #sleep()
-        #if rnd.random() > 0.813:
-        #    sleep(0,3)
 
         bank_slot(8)
         sleep()
         get_x_items()
         sleep()
         click()
-        sleep(.1,1)
-        if rnd.random() > 0.97:
-            sleep(0,30)
+        sleep(1,1)
         if rnd.random() > 0.813:
             sleep(0,3)
 
-        bezier_between(1065, 1075, 894, 910)
-        sleep(0.2, 1)
+        bezier_between(935, 955, 808, 869)
+        sleep(0.5, 1)
         click()
-        sleep(3.9, 2.5)
-        if rnd.random() > 0.9813:
-            Notbotting()
-
+        sleep(2, 2)
         spacekey()
-        sleep(.413, 0.5)
-        spacekey()
-
         if rnd.random() > 0.7:
             sleep(0,1)
             spacekey()
-            if rnd.random() > 0.93:
+            if rnd.random() > 0.3:
                 sleep()
                 spacekey()
 
-        Notbotting()
-        sleep(65, 9, 7)
-        if rnd.random() > 0.813:
-            sleep(0,18)
+        sleep(60 , 9)
 
-        if rnd.random() > 0.93:
-            sleep(0,30)
-            if rnd.random() > 0.911:
-                sleep(10, 130, 180)
-                print("Bigger Sleep")
-        if loops > 30 and rnd.random() > 0.9891:
-            sleep(10, 60, 120)
-            print("Biggest Sleep")
+        sleep()
+        if rnd.random() > 0.9:
+            sleep(0,10)
+
 
         loops += 1
         print("Completed Sequence", loops, "times")

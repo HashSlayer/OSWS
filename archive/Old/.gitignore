@@ -1,6 +1,0 @@
-#ignore
-.env
-*.env
-*notepad_content.txt
-notepad_content.txt
-```
