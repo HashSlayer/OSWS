@@ -16,11 +16,6 @@ def sleep(c=0.023, x=0.122, z=0.368):
 
 
 
-def long_sleep(c=0.8018, x=0.421, z=0.614):  # Similar pattern but longer delays
-    "Longer random delay between ~0.8018-2.053 seconds"
-    time.sleep(c + rnd.random() * x + rnd.random() * z)
-
-
 # These are the three main sleep functions, they are used to sleep for a random amount of time between a certain range.
 
 # Define a function for random sleep variance from ~0.1 to ~0.5 seconds
@@ -43,10 +38,7 @@ def sleep_if(sleep_chance=0.618, sleep_amount=0.01):
 #--------------------------------------------------------------------------------
 # // This block runs only if the script is executed directly, not when imported.
 if __name__ == "__main__":
-    quick_sleep() 
-    print("hello world from quick sleep")  # Prints message after quick sleep
     sleep()  
-    print("hello world from medium sleep")  # Prints message after medium sleep
-    long_sleep() 
-    print("hello world from long sleep")  # Prints message after long sleep
+    print("hello world from sleep")  # Prints message after medium sleep
+    sleep()
 
