@@ -6,15 +6,15 @@ import random as rnd
 
 # define sleep as in between medium and quick sleep
 def sleep(c=0.023, x=0.122, z=0.368):
-    "Sleep between ~0.023-0.513 seconds"
+    """Sleep between ~0.023-0.513 seconds
+    
+    For quick actions: sleep(0.007, 0.008, 0.017)  # ~0.007-0.032s
+    For long pauses: sleep(0.802, 0.421, 0.614)    # ~0.802-2.053s
+    Default medium: sleep()                         # ~0.023-0.513s
+    """
     time.sleep(c + rnd.random() * x + rnd.random() * z)
 
-def quick_sleep(c=0.007, x=0.008, z=0.017):
-    """
-    Basic random delay between ~0.007-0.032 seconds
-    c: base delay in seconds, x: additional random delay component, z: another random delay component
-    """
-    time.sleep(c + rnd.random() * x + rnd.random() * z)
+
 
 def long_sleep(c=0.8018, x=0.421, z=0.614):  # Similar pattern but longer delays
     "Longer random delay between ~0.8018-2.053 seconds"

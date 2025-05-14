@@ -26,7 +26,7 @@ def click(hold = 0.01, randomize = True):
     else:
         time.sleep(hold)
     pag.mouseUp(button='left') # Lift right button up (Finish click)
-    quick_sleep()
+    sleep(.01, .03, .03)
 
 def quick_click(hold = 0.1):
     

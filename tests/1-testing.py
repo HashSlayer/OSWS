@@ -127,9 +127,7 @@ def bot_loop(gui):
         # Rest between iterations
         if running:
             gui.update_status("Resting")
-            long_sleep()
-            long_sleep()
-            long_sleep()
+            sleep(3)
 
 def main():
     # Show welcome message

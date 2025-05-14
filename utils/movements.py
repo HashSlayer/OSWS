@@ -159,5 +159,5 @@ def move_mouse_smoothly(distance_x):
 
 # // This block runs only if the script is executed directly, not when imported.
 if __name__ == "__main__":
-    quick_sleep() 
+    sleep() 
     print("Hello World from movements.py") 
