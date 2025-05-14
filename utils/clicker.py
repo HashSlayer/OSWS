@@ -8,7 +8,7 @@ pag.MINIMUM_DURATION = 0
 pag.MINIMUM_SLEEP = 0
 pag.PAUSE = 0
 
-def click(hold = 0.03, randomize = True):
+def click(hold = 0.01, randomize = True):
     pag.mouseDown(button='left')  # Press the right button down
     if randomize:
         sleep(hold, hold/2 * rnd.random(), hold/3 * rnd.random())

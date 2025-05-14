@@ -11,7 +11,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, project_root)
 
 # Import utilities
-from utils.core.timing import sleep, long_sleep
+from utils.core.timing import sleep
 from utils.core.welcome import welcome
 from utils.movements import bezierMove
 from utils.clicker import click
