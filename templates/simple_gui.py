@@ -28,8 +28,8 @@ bot_thread = threading.Thread(target=lambda: walker(gui), daemon=True)
 click_count, max_clicks, click_interval, interval_variance, = 1, 420, 1, 0.1
 
 # Define your special keys
-ONOFF = Key.ctrl_l  # Left Alt key for toggling on/off
-KEY = Key.ctrl_r  # Right Alt key to exit the program
+ONOFF = Key.ctrl_l  # Left Control key for toggle
+KILL = Key.ctrl_r    # Right Control key for kill
 
 welcome()
 
@@ -472,7 +472,7 @@ def toggle_walker_key(key, gui):
                     # Start a new thread for the bot if not already running
                     bot_thread = threading.Thread(target=lambda: walker(gui), daemon=True)
                     bot_thread.start()
-    elif key == KEY:
+    elif key == KILL:
         # Handle the kill switch
         print("Kill switch activated")  # Log to the console
         gui.append_message("You killed it!")  # Update GUI with the termination message

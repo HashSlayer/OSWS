@@ -26,6 +26,10 @@ running = False
 running_lock = threading.Lock()
 walker_thread = None
 
+# Define control keys
+ONOFF = Key.ctrl_l  # Left Control key for toggle
+KILL = Key.ctrl_r   # Right Control key for kill
+
 loops = 0
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -149,9 +153,9 @@ def exit_program():
 
 def on_press(key):
     """Handle key press events to toggle the clicker or exit the program."""
-    if key == Key.ctrl_l:
+    if key == ONOFF:
         toggle_program()
-    elif key == Key.ctrl_r:
+    elif key == KILL:
         exit_program()
 
 def main():

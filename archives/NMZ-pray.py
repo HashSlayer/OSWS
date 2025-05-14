@@ -36,7 +36,7 @@ bot_thread = None
 
 # Control keys
 ONOFF = Key.ctrl_l  # Left Control key for toggle
-KEY = Key.ctrl_r    # Right Control key for exit
+KILL = Key.ctrl_r    # Right Control key for kill
 
 # Display welcome message
 welcome()
@@ -386,7 +386,7 @@ def toggle_walker_key(key, gui):
             gui.stop_bot()
         else:
             gui.start_bot()
-    elif key == KEY:  # Right CTRL
+    elif key == KILL:  # Right CTRL
         gui.on_close()
 
 if __name__ == "__main__":

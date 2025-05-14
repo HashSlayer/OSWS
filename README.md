@@ -72,6 +72,7 @@ The following Python packages are required and will be installed via the require
 - pyautogui - For automating mouse and keyboard actions
 - pynput - For monitoring and controlling input devices
 - mouse - For additional mouse control functionality
+- Scaling plugin set to 45%
 
 Tkinter is bundled with Python's standard installation and doesn't require separate installation through pip.
 

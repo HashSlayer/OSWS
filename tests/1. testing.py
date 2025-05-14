@@ -4,6 +4,7 @@ import threading
 import tkinter as tk
 from tkinter import ttk
 import random as rnd
+from pynput.keyboard import Listener, Key
 
 # Get the absolute path to the project root directory
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -15,11 +16,14 @@ from utils.core.welcome import welcome
 from utils.movements import bezierMove
 from utils.clicker import click
 from utils.item_slots import inv_slot
-from pynput.keyboard import Listener, Key
 
 # Global control variables
 running = False
 bot_thread = None
+
+# Define control keys
+ONOFF = Key.ctrl_l  # Left Control key for toggle
+KILL = Key.ctrl_r   # Right Control key for kill
 
 class BotGUI:
     def __init__(self, root):
@@ -89,7 +93,7 @@ class BotGUI:
 def on_press(key, gui):
     global running, bot_thread
     
-    if key == Key.ctrl_l:  # Left Control
+    if key == ONOFF:  # Left Control
         running = not running
         if running and (bot_thread is None or not bot_thread.is_alive()):
             gui.update_status("Starting...")
@@ -98,7 +102,7 @@ def on_press(key, gui):
         elif not running:
             gui.update_status("Stopping...")
     
-    elif key == Key.ctrl_r:  # Right Control
+    elif key == KILL:  # Right Control
         running = False
         gui.update_status("Exiting...")
         gui.root.after(1000, gui.root.destroy)
