@@ -13,12 +13,11 @@ sys.path.insert(0, project_root)
 #import other relevant modules here:
 #from Utilities.timmy import *
 from utils.core.timing import *
-from utils.core.welcome import *
+from utils.core.welcome import welcome
 from utils.movements import *
 from utils.clicker import *
 from utils.item_slots import *
-from utils.gui.confetti import *
-from utils.gui.base_bot_gui import BaseBotGUI
+from utils.gui.base_gui import BaseGUI
 
 welcome()
 
@@ -28,7 +27,7 @@ running_lock = threading.Lock()
 bot_thread = None  # Track the bot thread globally
 loops = 0  # Keep track of loops in the bot logic
 
-class SmitherGUI(BaseBotGUI):
+class SmitherGUI(BaseGUI):
     def __init__(self):
         super().__init__(bot_name="Smither Bot", bot_function=self.walker)
         

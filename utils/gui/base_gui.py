@@ -1,3 +1,5 @@
+"""Base GUI implementation for OSWS applications."""
+
 import tkinter as tk
 from tkinter import font as tkFont
 from pynput.keyboard import Listener, Key
@@ -5,9 +7,11 @@ import threading
 from datetime import datetime
 import os
 import random
-from .utils.click_tracker import ClickTracker
+from utils.gui.utils.click_tracker import ClickTracker
 
-class BaseBotGUI:
+class BaseGUI:
+    """Base GUI class providing common functionality for OSWS applications."""
+    
     def __init__(self, bot_name="Bot", bot_function=None):
         """
         Initialize base GUI for bots
@@ -24,15 +28,23 @@ class BaseBotGUI:
         self.root = tk.Tk()
         self.root.title(f"{bot_name} Status")
         self.root.geometry("1530x710")
+
+        # Initialize click tracking state
+        self.click_tracking = False
+        self.click_tracker = None
+        self.click_tracker_thread = None
+        
+        # Set gradient colors once at initialization
+        self.background_color_start = "#FF6B6B"  # Fixed top color
+        self.background_color_end = self.generate_random_color()  # Random bottom color (set once)
+        
+        # Setup GUI components
         self.setup_gui()
         
         # Initialize keyboard listener
         self.listener = Listener(on_press=self._on_key_press)
         self.listener.start()
 
-        # Initialize click tracker
-        self.click_tracker = None  # Will be initialized after canvas is created
-        
     def generate_random_color(self):
         """Generate a random vibrant color"""
         # Generate random RGB values but ensure they're vibrant
@@ -47,6 +59,8 @@ class BaseBotGUI:
         self.bg_color = "#4D96FF"  # Electric blue
         self.button_color = "#FF6B6B"  # Vibrant pink
         self.text_color = "#97E469"  # Fresh green
+        self.text_box_bg = "#2F3136"  # Discord-like dark gray
+        self.text_box_fg = "#FFFFFF"  # White text
         self.custom_font = tkFont.Font(family="Consolas", size=13, weight="bold")
         
         # Create gradient background
@@ -56,30 +70,28 @@ class BaseBotGUI:
         self.create_top_frame()
         self.create_text_boxes()
         
-        # Start time updates
+        # Start time updates only
         self.update_time()
-        
-        # Start gradient color updates
-        self.update_gradient_color()
         
     def create_gradient_background(self):
         """Create gradient background canvas"""
         self.canvas = tk.Canvas(self.root)
         self.canvas.pack(fill="both", expand=True)
         self.canvas.bind("<Configure>", self.on_resize)
-        self.background_color_start = "#FF6B6B"  # Fixed top color
-        self.background_color_end = self.generate_random_color()  # Random bottom color
         self.on_resize(None)
         
         # Initialize click tracker now that canvas exists
-        self.click_tracker = ClickTracker(self.append_message, self.canvas)
+        try:
+            self.click_tracker = ClickTracker(self.append_message, self.canvas)
+            print("Click tracker initialized successfully")
+        except Exception as e:
+            print(f"Error initializing click tracker: {e}")
+            self.click_tracker = None
         
     def update_gradient_color(self):
         """Update the bottom gradient color periodically"""
-        self.background_color_end = self.generate_random_color()
-        self.on_resize(None)
-        # Update every 5 seconds
-        self.root.after(5000, self.update_gradient_color)
+        # Disabled to keep gradient static during runtime
+        pass
         
     def create_top_frame(self):
         """Create the top frame with controls"""
@@ -179,9 +191,15 @@ class BaseBotGUI:
             
     def toggle_click_tracking(self):
         """Toggle click tracking"""
-        if not hasattr(self, 'click_tracking'):
-            self.click_tracking = False
-            
+        if self.click_tracker is None:
+            print("Click tracker not initialized, attempting to initialize...")
+            try:
+                self.click_tracker = ClickTracker(self.append_message, self.canvas)
+            except Exception as e:
+                print(f"Failed to initialize click tracker: {e}")
+                self.append_message("Error: Could not initialize click tracking")
+                return
+
         self.click_tracking = not self.click_tracking
         
         if self.click_tracking:
@@ -222,17 +240,34 @@ class BaseBotGUI:
                 self.bot_function(self)
                 
     def kill_bot(self):
-        """Kill the bot and close the GUI"""
+        """Kill the bot and clean up"""
         with self.running_lock:
             self.running = False
-        
-        # Stop click tracking if active
-        if hasattr(self, 'click_tracker') and self.click_tracker:
-            self.click_tracker.stop()
             
-        self.save_notepad()
-        self.append_message("Bot killed! Cleaning up...")
-        self.root.after(500, self.root.destroy)
+            # Stop click tracking
+            if self.click_tracker:
+                self.click_tracker.stop()
+            
+            if self.click_tracker_thread and self.click_tracker_thread.is_alive():
+                try:
+                    self.click_tracker_thread.join(timeout=1.0)
+                except Exception as e:
+                    print(f"Error stopping click tracker: {e}")
+            
+            # Update UI
+            self.start_button.config(text="START", bg=self.button_color)
+            self.kill_button.config(text="KILLED")
+            self.append_message("Bot terminated")
+            
+            # Clean up bot thread
+            if self.bot_thread and self.bot_thread.is_alive():
+                try:
+                    self.bot_thread.join(timeout=1.0)
+                except Exception as e:
+                    print(f"Error stopping bot thread: {e}")
+            
+            # Close GUI
+            self.root.after(500, self.root.destroy)
         
     def append_message(self, message):
         """Append a message to the text box"""
