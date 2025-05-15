@@ -1,0 +1,127 @@
+# OSWS AI Agent Guidelines
+
+When working with this codebase, maintain a balance between educational value and efficient, production-ready code:
+
+## Core Behaviors
+
+1. Educational & Code Quality Focus
+   - Explain complex concepts while suggesting optimizations
+   - Challenge inefficient approaches and suggest improvements
+   - Research and propose modern alternatives when relevant
+   - Help identify anti-patterns and teach best practices
+   - Balance between readability and performance
+
+2. Human-Like Automation Standards
+   - Use bezierMove() with appropriate duration scaling
+   - Implement dynamic timing variations based on action context
+   - Add micro-pauses and perturbations proportional to movement distance
+   - Consider human reaction times in interaction sequences
+
+3. Code Organization & Optimization
+   - Keep utility functions in appropriate directories:
+     * Core timing/movement: utils/core/
+     * GUI components: utils/gui/
+     * Click handling: utils/clicker.py
+   - Identify opportunities for code reuse and abstraction
+   - Suggest refactoring when modules become too complex
+   - Monitor and optimize performance bottlenecks
+
+## Implementation Rules
+
+### Mouse Movement
+```python
+# Required pattern:
+from utils.movements import bezierMove
+# Duration scales with distance for natural movement
+# Short moves (< 100px): ~0.1-0.3s
+# Medium moves (100-500px): ~0.2-0.6s
+# Long moves (>500px): ~0.4-1.0s
+bezierMove(x, y)
+
+# Never use:
+import pyautogui as pag
+pag.moveTo(x, y)  # Lacks human-like characteristics
+```
+
+### Timing Functions
+```python
+# Required pattern:
+from utils.core.timing import sleep, sleep_if
+# Base time + random variance up to 60% longer
+sleep(0.3, 0.5)  # Sleeps between 0.3 - 0.8 seconds
+sleep_if(0.5)    # 50% chance to pause
+
+# Never use:
+import time
+time.sleep(1)  # Predictable patterns are detectable
+```
+
+### Performance Monitoring
+- Profile critical sections when optimization is needed
+- Monitor memory usage in long-running operations
+
+
+### Error Handling Pattern
+```python
+try:
+    # Operation code
+    if not running:
+        clean_exit()
+    if error_threshold_exceeded:
+        log_error_state()
+        implement_recovery_strategy()
+except Exception as e:
+    print(f"Error: {e}")
+    log_error_state()  # Log before exit
+    clean_exit()
+```
+
+## File Structure Standards
+
+- Templates:
+  * 0. simple_start.py - Basic template without GUI
+  * 1. template.py - Full-featured template with GUI
+- Utils:
+  * core/ - Essential functionality (optimize heavily)
+  * gui/ - Interface components (prioritize responsiveness)
+  * movements.py - Mouse movement functions
+  * clicker.py - Click handling
+
+## Code Quality Requirements
+
+- Add comprehensive docstrings with:
+  * Parameter types and constraints
+  * Return value descriptions
+  * Usage examples with expected outputs
+  * Performance considerations
+- Include unit tests for critical functions
+- Document any non-obvious optimizations
+- Maintain clear dependency structure
+- Consider backwards compatibility
+
+## Code Style & Performance
+
+- Maximum file length: 600 lines (split logically if exceeded unless necessary)
+- Use descriptive, performance-intent indicating names
+- Follow Python PEP 8 guidelines
+- Profile before optimizing
+- Use appropriate data structures for performance
+- Consider memory usage in loops
+
+## Safety & Reliability Standards
+
+- Implement clean exit handlers with state logging
+- Add keyboard interrupt detection with state recovery
+- Include fail-safes with configurable thresholds
+- Verify coordinates before critical operations
+- Implement retry mechanisms with backoff
+- Add session monitoring for long-running operations
+
+## Improvement Guidelines
+
+- Regularly suggest modern alternatives to existing implementations
+- Research and propose new modules that could enhance functionality
+- Identify potential security vulnerabilities
+- Look for opportunities to improve error handling
+- Consider cross-platform compatibility
+- Suggest performance optimizations when spotted 
