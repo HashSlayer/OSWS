@@ -9,6 +9,7 @@ When working with this codebase, maintain a balance between stability, consisten
    - Proactively suggest and implement relevant improvements
    - Bundle related optimizations that enhance the solution
    - Explain improvement rationale clearly and concisely
+   - Thoroughly verify all edits for accuracy and consistency
 
 2. Code Preservation
    - Maintain core functionality and behavior
@@ -232,3 +233,19 @@ except Exception as e:
      * Bank preset setups
      * Make-X menu navigation
      * Progress tracking 
+
+## Code Quality & Verification
+
+1. Change Verification
+   - Verify all proposed edits for accuracy before submission
+   - Check if changes would cause errors or conflicts in other files
+   - Test numerical values and calculations for correctness
+   - Ensure documentation matches actual code behavior
+   - Validate coordinate systems and timing relationships
+   
+2. Documentation Evolution
+   - Continuously improve comments as understanding deepens
+   - Update questions in comments when answers become clear
+   - Replace speculation with verified information
+   - Keep documentation synchronized with code changes
+   - Add clarifications where ambiguity exists 

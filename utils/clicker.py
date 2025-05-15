@@ -10,6 +10,8 @@ pag.MINIMUM_DURATION = 0
 pag.MINIMUM_SLEEP = 0
 pag.PAUSE = 0
 
+#consider using pynput.mouse to control mouse movements instead of pyautogui for more undetected behavior.
+
 # Track key sequence for natural delays
 _last_key = None
 
