@@ -188,7 +188,7 @@ except Exception as e:
 
 ## Game Context & Mechanics
 
-1. Core OSRS Concepts
+1. Core Concepts
    - Game Ticks: 0.6 seconds between actions
    - Click Mechanics:
      * Left click: Primary action
