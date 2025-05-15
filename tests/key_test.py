@@ -99,19 +99,28 @@ class KeyPressAnalyzer:
         self.bot_button = ttk.Button(bot_frame, text="Start Bot", command=self.toggle_bot)
         self.bot_button.pack(fill=tk.X, padx=5, pady=5)
         
+        # Statistics/Analysis section (now a Treeview table)
+        stats_frame = ttk.LabelFrame(left_panel, text="Key Press Statistics (seconds)")
+        stats_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 10), padx=4)
+
+        columns = ("Key", "Source", "Mean", "Median", "Mode", "Min", "Max", "Std", "n")
+        self.stats_tree = ttk.Treeview(stats_frame, columns=columns, show="headings", height=14)
+        for col in columns:
+            self.stats_tree.heading(col, text=col)
+            self.stats_tree.column(col, anchor=tk.CENTER, width=70 if col != "Key" and col != "Source" else 55)
+        self.stats_tree.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+
+        # Add a vertical scrollbar
+        scrollbar = ttk.Scrollbar(stats_frame, orient="vertical", command=self.stats_tree.yview)
+        self.stats_tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        
         # Right panel for plots and log
         right_panel = ttk.Frame(main_container)
         main_container.add(right_panel, weight=3)
         
         # Plots
         self.setup_plots(right_panel)
-        
-        # Statistics/Analysis section
-        stats_frame = ttk.LabelFrame(right_panel, text="Key Press Statistics (seconds)")
-        stats_frame.pack(fill=tk.X, pady=(10, 0))
-        self.stats_text = scrolledtext.ScrolledText(stats_frame, height=10, font=("Consolas", 10))
-        self.stats_text.pack(fill=tk.X, padx=5, pady=5)
-        self.stats_text.config(state=tk.DISABLED)
         
         # Log section
         log_frame = ttk.LabelFrame(right_panel, text="Action Log")
@@ -346,9 +355,11 @@ class KeyPressAnalyzer:
             mode = "Bot" if is_bot else "Human"
             log_entry = f"[{mode}] {timestamp} - Action: {action}, Duration: {duration:.3f}s"
             
-            # Use after to schedule the GUI update to avoid Tcl errors
-            self.root.after(1, lambda: self.log_text.insert(tk.END, log_entry + '\n'))
-            self.root.after(1, lambda: self.log_text.see(tk.END))
+            def safe_insert_log():
+                if self.log_text.winfo_exists():
+                    self.log_text.insert(tk.END, log_entry + '\n')
+                    self.log_text.see(tk.END)
+            self.root.after(1, safe_insert_log)
             
             # Update visualization and statistics
             self.root.after(1, self.update_plots)
@@ -379,25 +390,37 @@ class KeyPressAnalyzer:
             except Exception:
                 return {'mean': '-', 'median': '-', 'mode': '-', 'min': '-', 'max': '-', 'std': '-', 'n': len(data)}
         
-        lines = []
-        header = f"{'Key':<10}{'Source':<8}{'Mean':>8}{'Median':>8}{'Mode':>8}{'Min':>8}{'Max':>8}{'Std':>8}{'n':>6}"
-        lines.append(header)
-        lines.append('-'*len(header))
+        # Clear the table
+        for row in self.stats_tree.get_children():
+            self.stats_tree.delete(row)
+
         for key in key_labels:
             # Human stats
             human_durations = [d for _, d in self.human_data.get(key, [])]
             h = get_stats(human_durations)
-            lines.append(f"{key:<10}{'Human':<8}{h['mean']:>8.3f}{h['median']:>8.3f}{h['mode']:>8.3f}{h['min']:>8.3f}{h['max']:>8.3f}{h['std']:>8.3f}{h['n']:>6}" if h['n'] else f"{key:<10}{'Human':<8}{'-':>8}{'-':>8}{'-':>8}{'-':>8}{'-':>8}{'-':>8}{'0':>6}")
+            self.stats_tree.insert("", "end", values=(
+                key, "Human",
+                f"{h['mean']:.3f}" if h['n'] else "-",
+                f"{h['median']:.3f}" if h['n'] else "-",
+                f"{h['mode']:.3f}" if h['n'] else "-",
+                f"{h['min']:.3f}" if h['n'] else "-",
+                f"{h['max']:.3f}" if h['n'] else "-",
+                f"{h['std']:.3f}" if h['n'] else "-",
+                h['n']
+            ))
             # Bot stats
             bot_durations = [d for _, d in self.bot_data.get(key, [])]
             b = get_stats(bot_durations)
-            lines.append(f"{key:<10}{'Bot':<8}{b['mean']:>8.3f}{b['median']:>8.3f}{b['mode']:>8.3f}{b['min']:>8.3f}{b['max']:>8.3f}{b['std']:>8.3f}{b['n']:>6}" if b['n'] else f"{key:<10}{'Bot':<8}{'-':>8}{'-':>8}{'-':>8}{'-':>8}{'-':>8}{'-':>8}{'0':>6}")
-        
-        # Update the stats text box
-        self.stats_text.config(state=tk.NORMAL)
-        self.stats_text.delete(1.0, tk.END)
-        self.stats_text.insert(tk.END, '\n'.join(lines))
-        self.stats_text.config(state=tk.DISABLED)
+            self.stats_tree.insert("", "end", values=(
+                key, "Bot",
+                f"{b['mean']:.3f}" if b['n'] else "-",
+                f"{b['median']:.3f}" if b['n'] else "-",
+                f"{b['mode']:.3f}" if b['n'] else "-",
+                f"{b['min']:.3f}" if b['n'] else "-",
+                f"{b['max']:.3f}" if b['n'] else "-",
+                f"{b['std']:.3f}" if b['n'] else "-",
+                b['n']
+            ))
 
     def update_plots(self):
         try:
