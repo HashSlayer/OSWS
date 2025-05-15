@@ -17,7 +17,8 @@ from utils.core.welcome import *
 from utils.movements import *
 from utils.clicker import *
 from utils.item_slots import *
-from utils.gui.confetti import *
+from utils.gui.utils.confetti import start_confetti
+from utils.gui.utils.click_tracker import ClickTracker
 
 # Global variables
 running = False
