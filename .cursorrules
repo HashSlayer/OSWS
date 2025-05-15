@@ -1,15 +1,73 @@
 # OSWS AI Agent Guidelines
 
-When working with this codebase, maintain a balance between educational value and efficient, production-ready code:
+When working with this codebase, maintain a balance between stability, consistency, and improvement.
+
+## Priority Hierarchy
+
+1. Task Focus (Highest Priority)
+   - Complete the specific task requested
+   - Proactively suggest and implement relevant improvements
+   - Bundle related optimizations that enhance the solution
+   - Explain improvement rationale clearly and concisely
+
+2. Code Preservation
+   - Maintain core functionality and behavior
+   - Preserve critical timing and coordinate systems
+   - Keep existing variable names unless improvement is clear
+   - Refactor when it demonstrably improves the code
+
+3. Consistency Standards
+   - Apply identical improvements across similar patterns
+   - Document and explain improvement patterns
+   - Verify consistency across affected files
+   - Establish and follow best practices
+
+4. Educational Value
+   - Explain complex concepts while improving code
+   - Challenge inefficient approaches with better solutions
+   - Demonstrate modern alternatives when relevant
+   - Share knowledge about performance implications
+
+## Naming Conventions
+
+1. Main Bot Files (kebab-case)
+   - Purpose: Executable bot implementations
+   - Pattern: descriptive-bot-name.py
+   - Examples:
+     * nightmare-zone.py
+     * iron-miner.py
+     * log-lighter.py
+
+2. Utility Modules (snake_case)
+   - Purpose: Importable functionality
+   - Pattern: descriptive_module_name.py
+   - Examples:
+     * base_gui.py
+     * item_slots.py
+     * movements.py
+
+3. Classes (PascalCase)
+   - Purpose: Object-oriented implementations
+   - Pattern: DescriptiveClassName
+   - Examples:
+     * BaseGUI
+     * IronMinerGUI
+     * NightmareZoneGUI
+
+4. Functions & Variables (snake_case)
+   - Purpose: Actions and data storage
+   - Pattern: descriptive_name
+   - Examples:
+     * def walker()
+     * current_slot = 1
 
 ## Core Behaviors
 
-1. Educational & Code Quality Focus
-   - Explain complex concepts while suggesting optimizations
-   - Challenge inefficient approaches and suggest improvements
-   - Research and propose modern alternatives when relevant
-   - Help identify anti-patterns and teach best practices
-   - Balance between readability and performance
+1. Change Management
+   - Verify file existence before operations
+   - Never delete files unless explicitly requested
+   - Confirm current state before suggesting changes
+   - Prefer preservation over modification
 
 2. Human-Like Automation Standards
    - Use bezierMove() with appropriate duration scaling
@@ -17,14 +75,14 @@ When working with this codebase, maintain a balance between educational value an
    - Add micro-pauses and perturbations proportional to movement distance
    - Consider human reaction times in interaction sequences
 
-3. Code Organization & Optimization
+3. Code Organization
    - Keep utility functions in appropriate directories:
      * Core timing/movement: utils/core/
      * GUI components: utils/gui/
      * Click handling: utils/clicker.py
-   - Identify opportunities for code reuse and abstraction
-   - Suggest refactoring when modules become too complex
-   - Monitor and optimize performance bottlenecks
+   - Maintain clear separation of concerns
+   - Follow established project structure
+   - Keep related functionality together
 
 ## Implementation Rules
 
@@ -56,11 +114,6 @@ import time
 time.sleep(1)  # Predictable patterns are detectable
 ```
 
-### Performance Monitoring
-- Profile critical sections when optimization is needed
-- Monitor memory usage in long-running operations
-
-
 ### Error Handling Pattern
 ```python
 try:
@@ -71,57 +124,111 @@ try:
         log_error_state()
         implement_recovery_strategy()
 except Exception as e:
-    print(f"Error: {e}")
+    gui.append_message(f"Error: {e}")
     log_error_state()  # Log before exit
     clean_exit()
 ```
 
-## File Structure Standards
+## Documentation Standards
 
-- Templates:
-  * 0. simple_start.py - Basic template without GUI
-  * 1. template.py - Full-featured template with GUI
-- Utils:
-  * core/ - Essential functionality (optimize heavily)
-  * gui/ - Interface components (prioritize responsiveness)
-  * movements.py - Mouse movement functions
-  * clicker.py - Click handling
+1. New Code
+   - Comprehensive docstrings required
+   - Parameter types and constraints
+   - Return value descriptions
+   - Usage examples
+   - Performance considerations
 
-## Code Quality Requirements
+2. Existing Code Modifications
+   - Preserve existing documentation style
+   - Update only affected sections
+   - Maintain existing format
+   - Add documentation only if missing or incorrect
 
-- Add comprehensive docstrings with:
-  * Parameter types and constraints
-  * Return value descriptions
-  * Usage examples with expected outputs
-  * Performance considerations
-- Include unit tests for critical functions
-- Document any non-obvious optimizations
-- Maintain clear dependency structure
-- Consider backwards compatibility
+## Response Guidelines
 
-## Code Style & Performance
+1. Communication Clarity
+   - Match explanation detail to change complexity
+   - For simple changes: Brief, focused responses
+   - For complex changes: Detailed explanations
+   - Highlight critical changes first
 
-- Maximum file length: 600 lines (split logically if exceeded unless necessary)
-- Use descriptive, performance-intent indicating names
-- Follow Python PEP 8 guidelines
-- Profile before optimizing
-- Use appropriate data structures for performance
-- Consider memory usage in loops
+2. Tool Usage
+   - Plan tool sequence before starting
+   - Use minimum necessary tools
+   - Verify tool necessity before use
+   - Prefer targeted tools over broad ones
 
-## Safety & Reliability Standards
+## Safety & Reliability
 
-- Implement clean exit handlers with state logging
-- Add keyboard interrupt detection with state recovery
-- Include fail-safes with configurable thresholds
-- Verify coordinates before critical operations
-- Implement retry mechanisms with backoff
-- Add session monitoring for long-running operations
+1. State Management
+   - Implement clean exit handlers
+   - Add keyboard interrupt detection
+   - Include configurable fail-safes
+   - Monitor long-running operations
 
-## Improvement Guidelines
+2. Error Prevention
+   - Verify coordinates before operations
+   - Implement retry mechanisms
+   - Add appropriate logging
+   - Include state recovery options
 
-- Regularly suggest modern alternatives to existing implementations
-- Research and propose new modules that could enhance functionality
-- Identify potential security vulnerabilities
-- Look for opportunities to improve error handling
-- Consider cross-platform compatibility
-- Suggest performance optimizations when spotted 
+## Testing & Quality
+
+1. Code Quality
+   - Maximum file length: 600 lines
+   - Follow Python PEP 8 guidelines
+   - Use descriptive names
+   - Consider memory usage
+
+2. Testing Requirements
+   - Include unit tests for critical functions
+   - Test error handling paths
+   - Verify state management
+   - Test boundary conditions
+
+## Game Context & Mechanics
+
+1. Core OSRS Concepts
+   - Game Ticks: 0.6 seconds between actions
+   - Click Mechanics:
+     * Left click: Primary action
+     * Right click: Context menu
+     * Space/Number: Dialog/menu navigation
+   - Inventory:
+     * 28 slots total
+     * Items can stack (noted items, resources)
+     * Grid layout: 4x7, indexed 0-27
+
+2. Common Activities
+   - Banking:
+     * Withdraw-X requires menu navigation
+     * Quick-withdraw/deposit all
+     * Note/unnote item conversions
+   - Resource Gathering:
+     * Click resource -> Wait for animation -> Inventory update
+     * Activity indicators: Animation, XP drops
+     * Common intervals: Mining (2-3s), Woodcutting (2.4s)
+   - Combat & Prayer:
+     * Prayer flicking timing (0.6s ticks)
+     * Potion boost intervals (60-90s)
+     * NMZ mechanics (absorption, overload timing)
+
+3. Anti-Pattern Detection
+   - Excessive Clicking: More than 1 click per action
+   - Perfect Timing: Avoid exact intervals
+   - Linear Movement: Mouse should use natural curves
+   - Static Positions: Add pixel variance to coordinates
+
+4. Activity Patterns
+   - Resource Cycles:
+     * Gather until inventory full
+     * Bank/drop inventory
+     * Return to resource
+   - Combat Cycles:
+     * Monitor health/prayer
+     * Manage potion timers
+     * Handle inventory changes
+   - Crafting/Smithing:
+     * Bank preset setups
+     * Make-X menu navigation
+     * Progress tracking 

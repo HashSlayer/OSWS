@@ -3,8 +3,7 @@
 *.env
 *notepad_content.txt
 notepad_content.txt
-cursorrules.md
-cursorrules.txt
+.cursorrules
 
 # Python cache files
 __pycache__/
