@@ -82,3 +82,6 @@ OSWS uses Tkinter to display a GUI in many scripts to handle automation processe
 
 ## Human-like Mouse Movement
 OSWS uses altered Bezier curves to create smooth, human-like mouse movements; and random pauses, stops, and occasional mistakes with path correction to simulate realistic user behavior.
+
+## Additional Notes:
+For image callibration using invetory grids, set the opacity to max and fill slots with the color value '#FFFF6A00'

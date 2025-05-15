@@ -33,7 +33,7 @@ class IronMinerGUI(BaseGUI):
         
         # Override colors after parent initialization
         self.text_box_bg = "#4A4A4A"  # Lighter gray
-        self.text_box_fg = "#FFFFFF"  # White text
+        self.text_box_fg = "#FFFF92"  # White text
         
         # Set static gradient colors
         self.background_color_start = "#FF6B6B"  # Fixed top color

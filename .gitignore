@@ -14,3 +14,9 @@ __pycache__/
 # Cursor rules
 .cursorrules
 .cursor/
+
+# Debug files and screenshots
+debug/
+*.png
+*.jpg
+*.jpeg

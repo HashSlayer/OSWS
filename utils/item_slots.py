@@ -25,12 +25,14 @@ Key Concepts:
 
 Areas for Improvement:
 1. ✓ Replace wildcard imports with specific imports (Fixed)
-2. Add validation for coordinate ranges
+2. ✓ Add configuration system for calibrated coordinates (Fixed)
 3. Consider configuration system for timing patterns
 """
 
 import random as rnd
 import tkinter as tk
+import os
+import json
 from pynput.keyboard import Key, Controller
 
 # Core utilities
@@ -42,49 +44,75 @@ from .movements import bezierMove, bezier_between, bezier_relative, simple_move
 # Click utilities
 from .clicker import click, right_click
 
-# Inventory slots can change depending on the resolution. This is a function to get the correct inventory slots for any resolution.
-# Currently optimized for 1920x1080, 16:9 aspect ratio. 
-# The scaling plugin should be used to scale the inventory slots to 45% as well. 
+# Calibration utilities
+from .calibration.config import load_inventory_config
 
 # Keyboard controller for modifier keys
 keyboard = Controller()
 
-def inv_slot(slot = 1, time_multiplier = 1, x = 1625, y=638, z=10):
+# Cache for configuration to avoid repeated file reads
+_inventory_config = None
+
+def load_inventory_config_cached():
     """
-    Calculate and move to an inventory slot position.
+    Load inventory configuration with caching.
+    
+    Returns:
+        dict: Configuration with base_x, base_y, x_spacing, y_spacing
+    """
+    global _inventory_config
+    
+    # Return cached config if available
+    if _inventory_config is not None:
+        return _inventory_config
+    
+    # Load from utility function and cache it
+    _inventory_config = load_inventory_config()
+    return _inventory_config
+
+def inv_slot(slot = 1, time_multiplier = 1, z=10):
+    """
+    Calculate and move to an inventory slot position using calibrated coordinates.
     
     Args:
         slot: Inventory slot number (1-28)
         time_multiplier: Movement speed multiplier
-        x: Base x-coordinate for first slot (1920x1080, 45% scaling)
-        y: Base y-coordinate for first slot (1920x1080, 45% scaling)
         z: Click variance radius (creates (2z+1) x (2z+1) click area, e.g. z=10 → 21x21px)
     
     Note:
     - z defines valid click area within item bounds
     - Fixed grid: 4 columns, 7 rows
-    - 61px horizontal spacing, 51px vertical spacing
+    - Uses calibrated spacing if available, otherwise defaults
     """
+    if not 1 <= slot <= 28:
+        raise ValueError(f"Invalid inventory slot: {slot}. Must be between 1 and 28.")
+    
+    # Load configuration
+    config = load_inventory_config_cached()
+    
+    # Get base coordinates and spacing from config
+    base_x = config['base_x']
+    base_y = config['base_y']
+    x_spacing = config['x_spacing']
+    y_spacing = config['y_spacing']
+    
+    # Calculate slot position
     slot -= 1  # Convert to 0-based index
     row = slot // 4  # Calculate row (0-6)
     column = slot % 4  # Calculate column (0-3)
     
-    # Calculate slot position
-    x = x + (61 * column)  # 61 pixels between columns
-    y = y + (51 * row)    # 51 pixels between rows
+    x = base_x + (x_spacing * column)  # Apply horizontal spacing
+    y = base_y + (y_spacing * row)     # Apply vertical spacing
     
     # Add random variance within item bounds
     x = rnd.randint(x - z, x + z)
     y = rnd.randint(y - z, y + z)
     
-    if slot < 29:
-        #print("Slot:", slot, " Row:", row, " Column:", column, " X:", x, " Y:", y)
-        bezierMove(x, y, time_multiplier)
-    else:
-        sleep(.1, .9, .9)  # Invalid slot - could be improved with error handling
+    # Move to the slot
+    bezierMove(x, y, time_multiplier)
 
 # Dropping items, create a drop_inventory function that holds shift and clicks the inventory slots
-def drop_inventory(slots = 28, time_multiplier = 1, x = 1625, y=638, z=8):
+def drop_inventory(slots = 28, time_multiplier = 1, z=8):
     """
     Drop items from inventory using various patterns.
     
@@ -112,7 +140,7 @@ def drop_inventory(slots = 28, time_multiplier = 1, x = 1625, y=638, z=8):
         if random_value > 0.8:  # Column pattern
             for i in range(4):
                 for slot in range(i + 1, slots + 1, 4):
-                    inv_slot(slot, time_multiplier, x, y, z)
+                    inv_slot(slot, time_multiplier, z)
                     sleep(.1, .1, .1)
                     if rnd.random() > 0.98:  # Occasional extra delay
                         sleep(.1, .1, .1)
@@ -126,7 +154,7 @@ def drop_inventory(slots = 28, time_multiplier = 1, x = 1625, y=638, z=8):
                     for col in range(4):
                         slot = row * 4 + col + 1
                         if slot <= slots:
-                            inv_slot(slot, time_multiplier, x, y, z)
+                            inv_slot(slot, time_multiplier, z)
                             sleep(.1, .1, .1)
                             if rnd.random() > 0.98:
                                 sleep(.1, .1, .1)
@@ -137,7 +165,7 @@ def drop_inventory(slots = 28, time_multiplier = 1, x = 1625, y=638, z=8):
                     for col in range(3, -1, -1):
                         slot = row * 4 + col + 1
                         if slot <= slots:
-                            inv_slot(slot, time_multiplier, x, y, z)
+                            inv_slot(slot, time_multiplier, z)
                             sleep(.1, .1, .1)
                             if rnd.random() > 0.95:
                                 sleep(.1, .1, .1)
@@ -147,7 +175,7 @@ def drop_inventory(slots = 28, time_multiplier = 1, x = 1625, y=638, z=8):
                                 
         else:  # Sequential pattern
             for slot in range(1, slots + 1):
-                inv_slot(slot, time_multiplier, x, y, z)
+                inv_slot(slot, time_multiplier, z)
                 sleep(.1, .1, .1)
                 if rnd.random() > 0.98:
                     sleep(.1, .1, .1)
@@ -157,7 +185,7 @@ def drop_inventory(slots = 28, time_multiplier = 1, x = 1625, y=638, z=8):
     finally:
         keyboard.release(Key.shift)  # Ensure shift key is released
 
-def simp_inv_slot(slot = 1, time_multiplier = 1, x = 1625, y=638, z=8):
+def simp_inv_slot(slot = 1, time_multiplier = 1, z=8):
     """
     Simplified inventory slot movement (less human-like).
     
@@ -173,20 +201,34 @@ def simp_inv_slot(slot = 1, time_multiplier = 1, x = 1625, y=638, z=8):
     precise click area (17x17px vs 21x21px) since this function is often used for
     more deliberate actions.
     
-    The sleep for invalid slots is maintained for consistency with the inv_slot function
-    and to prevent errors if an invalid slot is accidentally requested.
+    Uses the same configuration system as inv_slot.
     """
+    if not 1 <= slot <= 28:
+        raise ValueError(f"Invalid inventory slot: {slot}. Must be between 1 and 28.")
+    
+    # Load configuration
+    config = load_inventory_config_cached()
+    
+    # Get base coordinates and spacing from config
+    base_x = config['base_x']
+    base_y = config['base_y']
+    x_spacing = config['x_spacing']
+    y_spacing = config['y_spacing']
+    
+    # Calculate slot position
     slot -= 1
     row = slot // 4
     column = slot % 4
-    x = x + (61 * column)
-    y = y + (51 * row)
+    
+    x = base_x + (x_spacing * column)
+    y = base_y + (y_spacing * row)
+    
+    # Add random variance
     x = rnd.randint(x - z, x + z)
     y = rnd.randint(y - z, y + z)
-    if slot < 29:
-        simple_move(x, y, time_multiplier)
-    else:
-        sleep(.1, .9, .9)
+    
+    # Move to the slot
+    simple_move(x, y, time_multiplier)
 
 def bank_slot(slot = 1, time_multiplier = 1, sleep_for = .01, sleep_upto = .01, x = 520, y=160, z=10):
     """
