@@ -15,7 +15,6 @@ from utils.core.welcome import welcome
 from utils.movements import *
 from utils.clicker import *
 from utils.item_slots import *
-from utils.gui.confetti import *
 from utils.gui.base_bot_gui import BaseBotGUI
 
 welcome()

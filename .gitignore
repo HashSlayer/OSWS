@@ -5,3 +5,9 @@
 notepad_content.txt
 cursorrules.md
 cursorrules.txt
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.Python

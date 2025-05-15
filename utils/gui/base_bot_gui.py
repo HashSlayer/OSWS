@@ -5,6 +5,7 @@ import threading
 from datetime import datetime
 import os
 import random
+from .utils.click_tracker import ClickTracker
 
 class BaseBotGUI:
     def __init__(self, bot_name="Bot", bot_function=None):
@@ -28,6 +29,9 @@ class BaseBotGUI:
         # Initialize keyboard listener
         self.listener = Listener(on_press=self._on_key_press)
         self.listener.start()
+
+        # Initialize click tracker
+        self.click_tracker = None  # Will be initialized after canvas is created
         
     def generate_random_color(self):
         """Generate a random vibrant color"""
@@ -66,6 +70,9 @@ class BaseBotGUI:
         self.background_color_start = "#FF6B6B"  # Fixed top color
         self.background_color_end = self.generate_random_color()  # Random bottom color
         self.on_resize(None)
+        
+        # Initialize click tracker now that canvas exists
+        self.click_tracker = ClickTracker(self.append_message, self.canvas)
         
     def update_gradient_color(self):
         """Update the bottom gradient color periodically"""
@@ -172,12 +179,19 @@ class BaseBotGUI:
             
     def toggle_click_tracking(self):
         """Toggle click tracking"""
-        self.click_tracking = not getattr(self, 'click_tracking', False)
-        self.track_clicks_button.config(
-            text=f"Track Clicks: {'ON' if self.click_tracking else 'OFF'}",
-            bg="#2ECC73" if self.click_tracking else self.button_color
-        )
+        if not hasattr(self, 'click_tracking'):
+            self.click_tracking = False
+            
+        self.click_tracking = not self.click_tracking
         
+        if self.click_tracking:
+            if not self.click_tracker.tracking:
+                self.click_tracker.start()
+            self.track_clicks_button.config(text="Track Clicks: ON", bg="#2ECC73")
+        else:
+            self.click_tracker.stop()
+            self.track_clicks_button.config(text="Track Clicks: OFF", bg=self.button_color)
+            
     def toggle_bot(self):
         """Toggle the bot on/off"""
         with self.running_lock:
@@ -211,6 +225,11 @@ class BaseBotGUI:
         """Kill the bot and close the GUI"""
         with self.running_lock:
             self.running = False
+        
+        # Stop click tracking if active
+        if hasattr(self, 'click_tracker') and self.click_tracker:
+            self.click_tracker.stop()
+            
         self.save_notepad()
         self.append_message("Bot killed! Cleaning up...")
         self.root.after(500, self.root.destroy)
